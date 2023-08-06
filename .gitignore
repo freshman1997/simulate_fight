@@ -1,0 +1,17 @@
+x64
+build
+*.dir
+Debug
+Release
+.vscode
+.cache
+CMakeFiles
+
+.vs
+*.vcxproj
+*.filters
+*.user
+*.cmake
+CMakeCache.txt
+*.sln
+3rdparty
