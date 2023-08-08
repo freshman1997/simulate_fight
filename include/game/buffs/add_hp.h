@@ -3,8 +3,12 @@
 
 #include "../buff.h"
 
-class AddHpBuff : BaseBuff
+class AddHpBuff : public BaseBuff
 {
+public:
+    virtual Object * clone();
+    virtual Object * clone_and_clean();
+
 public:
     AddHpBuff();
     virtual void calc(FightUnit *);

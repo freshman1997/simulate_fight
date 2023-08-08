@@ -75,7 +75,6 @@ class HeroBase : public FightUnit
 {
 
 public:
-    virtual HeroBase * clone() = 0;
     virtual void update();
 
 public:

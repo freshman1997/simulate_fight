@@ -21,7 +21,8 @@ public:
     BaseBuff() : BaseBuff(buff_type::none){}
     BaseBuff(buff_type t) : type(t), infinite(false) {}
 
-
+    virtual Object * clone() = 0;
+    virtual Object * clone_and_clean() = 0;
     virtual void calc(FightUnit *) = 0;
 
     virtual void on_add() {}
