@@ -13,10 +13,6 @@ public:
     // 进入战斗前计算
     virtual void on_begin() = 0;
 
-    void set_owner(HeroBase *hero) { this->owner = hero; }
-    HeroBase * get_owner() { return this->owner; }
-protected:
-    HeroBase *owner;
 };
 
 #endif

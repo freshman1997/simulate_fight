@@ -5,7 +5,6 @@
 class Yasuo : public HeroBase
 {
 public:
-    void init();
     virtual void update();
     
 };

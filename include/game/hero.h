@@ -6,23 +6,33 @@
 
 #include "actor.h"
 #include "game/actor.h"
-// 战斗怎么做？
-/*
-    1、先寻找目标
-    2、检查攻击距离，不够则寻路过去
-    3、普攻攻击并产生蓝量、蓝量满了释放技能
-    4、目标死亡切换回到 1
-    5、如果没办法攻击，如被占满外围位置了，则不动等待其他棋子攻击
-*/
 
 class AiBase;
 class SkillBase;
 class EquipBase;
 
+enum class FightState
+{
+    moving,
+    attacking,
+    performing_skill,
+    stuck,
+
+};
+
 #define add_xx(xx) void add_##xx(int num) { this->xx += num; }
 
 class FightUnit : public Actor
 {
+public:
+    virtual void init() = 0;
+    virtual void after_init_check() = 0;
+    virtual float get_cumulative_time() = 0;
+
+public:
+    virtual void attack() = 0;
+    
+
 public:
     add_xx(hp)
     add_xx(mp)
@@ -37,8 +47,8 @@ public:
     add_xx(move_speed)
 
 public:
-    int side;                   // 用于战斗期间
-    int rest_time;              // 上一帧不够动作剩余时间
+    int side = 0;               // 用于战斗期间
+    float rest_time = 0;        // 上一帧不够动作剩余时间
 
 public:
     int hp = 0;                 // 血量
@@ -63,8 +73,8 @@ public:
 
 public:
     // 技能、AI
-    AiBase *ai;
-    SkillBase *skill;
+    AiBase *ai = nullptr;
+    SkillBase *skill = nullptr;
 
     // 装备列表，包括散件和成装
     std::vector<EquipBase *> equipments;
@@ -75,17 +85,12 @@ class HeroBase : public FightUnit
 {
 
 public:
+    HeroBase();
+    virtual void init();
     virtual void update();
 
 public:
-    int id;
-
-private:
-    bool hasAngue;
-    int angue;
-    int blood;
-    int star;
-    std::unordered_map<std::string, int> extraData;
+    
 };
 
 #endif

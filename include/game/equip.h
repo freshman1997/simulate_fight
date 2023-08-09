@@ -2,7 +2,7 @@
 #define __EQUIP_H__
 #include "actor.h"
 
-class FightUnit;
+class HeroBase;
 
 class EquipBase : public Actor
 {
@@ -15,7 +15,8 @@ public:
     virtual EquipBase * clone() = 0;
     
 public:
-    FightUnit *owner;
+    HeroBase *owner;
+    Vector2 pos;
 };
 
 #endif

@@ -59,6 +59,8 @@ public:
     std::vector<FightUnit *> find_around(int len, const OffsetCoord &pos);
     FightUnit * rand_around_one(int len, const OffsetCoord &pos);
 
+	float distance(FightUnit *unit);
+
 private:
 
     class MapHolder;
