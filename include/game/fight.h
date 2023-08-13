@@ -6,13 +6,15 @@
 #include "hero.h"
 #include "actor.h"
 
+class Game;
+
 // 单个回合
 class Fight : public Actor
 {
 
 public:
     Fight();
-    virtual void update();
+    virtual void update(float deltaTime);
 
 public:
     bool IsBlocked();   // 用于外部检查是否失败，逻辑错误等等异常导致本场游戏无效
@@ -28,12 +30,13 @@ public:
     
 public:
     void push_fight_unit(FightUnit *, bool);
-
+    bool is_end() const;
 public:
     std::vector<FightUnit *> player1;
     std::vector<FightUnit *> player2;
 
     std::vector<FightUnit *> fight_actors;
+    Game *game;
     bool started;
     bool error;
 };

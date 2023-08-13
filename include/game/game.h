@@ -44,7 +44,7 @@ public:
     void replace_hero(Vector2 bpos, Vector2 hpos);
 
     // 放置装备
-    void puton_equip(bool board, Vector2 pos);
+    void puton_equip(bool board, Vector2 epos, Vector2 hpos);
 public:
     // 开始战斗前的初始化工作
     void pre_start();
@@ -63,6 +63,8 @@ public:
     std::vector<HeroBase *> holderHeros;    // 备战区的棋子
 };
 
+#define FRAME(frame_rate) (1.0 / frame_rate * 1000)
+class Timer;
 
 // 单场比赛对象
 class Game : public std::enable_shared_from_this<Game>
@@ -75,11 +77,13 @@ public:
 
     void game_loop();
 
+    void continue_game();
+    void pause_game();
+
     // TODO
     ~Game() {}
 private:
     bool update(float delta);
-    int get_next_time();
 
     void start_pvp();
     void start_pve();
@@ -87,21 +91,33 @@ private:
     void clear_cache();
 
 public:
-    int id;                                 // 当前场次的id
-    int round;                              // 当前是第几场，如3-2
-    bool pause;                             // 暂停标志
-    long long start_time;                   // 开始游戏时间点
-    long long end_time;                     // 结束游戏时间点
-    long long last_time;                    // 上次执行的时间
-    int frame_rate = 1000;                  // 帧率
-    GameState state;                        // 游戏当前阶段
-    GamePlayer players[8];                  // 当前场次的玩家
-    FightContext *ctx;                      // 当前场次的上下文
-    long long state_start_time;             // 开始战斗时间点
-    bool on_fight;                          // 是否处于战斗状态
-    std::vector<Fight *> round_objects;     // 战斗回合对象, 最多8个，最少1个
-    InputCommandBuffQueue *input;           // 输入队列
-    OutputFrameBuffQueue *output;           // 输出队列
+    float get_frame_time();
+    bool is_all_fight_end();
+
+public:
+    int id;                                     // 当前场次的id
+    int round;                                  // 当前是第几场，如3-2
+    int round_end_count;                        // 当前回合结束的场数
+    bool pause;                                 // 暂停标志
+    bool resume;                                // 恢复标志
+    long long start_time;                       // 开始游戏时间点
+    long long end_time;                         // 结束游戏时间点
+    long long last_time;                        // 上次执行的时间
+    int state_pass_time;                        // 当前状态已经过去的时间
+    int frame_rate;                             // 帧率
+    int quick_frame_rate;                       // 2倍速
+    float cur_frame_time;                       // 当前帧率
+    bool normal_rate;                           // 是否处于加速状态
+    int next_time;                              // 下次执行间隔时间
+    GameState state;                            // 游戏当前阶段
+    GamePlayer players[8];                      // 当前场次的玩家
+    FightContext *ctx;                          // 当前场次的上下文
+    long long state_start_time;                 // 开始战斗时间点
+    bool on_fight;                              // 是否处于战斗状态
+    std::vector<Fight *> round_objects;         // 战斗回合对象, 最多8个，最少1个
+    InputCommandBuffQueue *input;               // 输入队列
+    OutputFrameBuffQueue *output;               // 输出队列
+    Timer *timer = nullptr;                     // 定时器对象
 };
 
 #endif

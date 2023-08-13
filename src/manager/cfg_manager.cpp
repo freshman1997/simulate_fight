@@ -1,10 +1,11 @@
 ﻿#include "manager/cfg_manager.h"
 
-#define __REGISTER__(cfg) do { cfg.set_cfg_name(#cfg); this->cfgs[#cfg] = &cfg; } while(false);
+#define __REGISTER_CFG__(cfg) do { cfg.set_cfg_name(#cfg); this->cfgs[#cfg] = &cfg; } while(false);
 
 CfgManager::CfgManager()
 {
-    __REGISTER__(buff_cfg)
+    __REGISTER_CFG__(buff_cfg)
+    __REGISTER_CFG__(game_cfg)
 }
 
 CfgManager & CfgManager::get_instance()

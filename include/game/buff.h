@@ -10,6 +10,31 @@ enum class buff_type : unsigned char
     hp,
 };
 
+enum class buff_sub_type : unsigned char
+{
+    none = 0,
+};
+
+enum class buff_func_type : unsigned char
+{
+    none = 0,
+};
+
+enum class buff_trigger_condition : unsigned char
+{
+    none = 0,
+};
+
+enum class buff_target_choose_rule : unsigned char
+{
+    none = 0,
+};
+
+enum class buff_target_sort_type : unsigned char
+{
+    none = 0,
+};
+
 enum class add_type
 {
     

@@ -3,7 +3,7 @@
 Fight::Fight() : started(false), error(false)
 {}
 
-void Fight::update()
+void Fight::update(float deltaTime)
 {
     if (!started) {
         pre_enable_buffs();
@@ -12,7 +12,7 @@ void Fight::update()
     }
 
     for (auto &it : fight_actors) {
-        it->update();
+        it->update(deltaTime);
     }
 }
 
@@ -62,4 +62,9 @@ void Fight::round(FightUnit *unit)
 {
    
 
+}
+
+bool Fight::is_end() const
+{
+    return false;
 }

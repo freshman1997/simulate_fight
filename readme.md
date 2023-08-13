@@ -17,3 +17,7 @@ game manager -> game -> round -> player
                                -> buff
                                -> skill
                                -> ai 
+
+
+装备的层数，属性变化
+

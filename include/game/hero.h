@@ -10,15 +10,7 @@
 class AiBase;
 class SkillBase;
 class EquipBase;
-
-enum class FightState
-{
-    moving,
-    attacking,
-    performing_skill,
-    stuck,
-
-};
+class Fight;
 
 #define add_xx(xx) void add_##xx(int num) { this->xx += num; }
 
@@ -31,7 +23,19 @@ public:
 
 public:
     virtual void attack() = 0;
+    virtual void move() = 0;
+    virtual void on_being_attack() = 0;
+    virtual void buff_action() = 0;
     
+public:
+    bool can_perform_skill() { return skill != nullptr; }
+    bool can_attack() 
+    { 
+        // TODO
+        return false;
+    }
+    
+    bool is_die() { return hp <= 0; }
 
 public:
     add_xx(hp)
@@ -64,8 +68,12 @@ public:
     int move_speed = 0;         // 移速
 
 public:
+    int shield = 0;             // 护盾值
+
+public:
     // position
     Vector2 pos;
+    Fight *round_obj = nullptr;
     
 public:
     const std::vector<std::pair<int, int>> *path = nullptr;   // 暂存的路径
@@ -87,10 +95,15 @@ class HeroBase : public FightUnit
 public:
     HeroBase();
     virtual void init();
-    virtual void update();
+    virtual void update(float deltaTime);
+
+    virtual void move();
+    virtual void attack();
+    virtual void on_being_attack();
+    virtual void buff_action();
 
 public:
-    
+    int id;
 };
 
 #endif

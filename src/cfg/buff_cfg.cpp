@@ -3,7 +3,7 @@
 
 bool BuffCfg::load()
 {
-    READ_CFG("buffs.json", &BuffCfg::load_config)
+    //READ_CFG("buff.json", &BuffCfg::load_config)
     return true;
 }
 

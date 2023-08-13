@@ -8,7 +8,7 @@ class HeroBase;
 class WuJinZhiRen : public EquipBase
 {
 public:
-    virtual void update();
+    virtual void update(float deltaTime);
 
     // 进入战斗前计算
     virtual void on_begin() = 0;

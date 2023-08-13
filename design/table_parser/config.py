@@ -6,6 +6,7 @@ xls_config = {
     ],
     
     "fight": [
+        { "parse_file": "Z_战斗.xlsx", "parse_sheet": "misc", "output": "fight_misc.json", },
         { "parse_file": "Z_战斗.xlsx", "parse_sheet": "阶段", "output": "fight_phase.json", }
     ],
     "hero": [

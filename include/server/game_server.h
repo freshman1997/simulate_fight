@@ -1,5 +1,7 @@
 ﻿#ifndef __GAME_SERVER_H__
 #define __GAME_SERVER_H__
+#include <unordered_map>
+#include "timer/timer.h"
 
 class GameServer
 {
@@ -10,7 +12,7 @@ public:
 
 private:
     bool stop;
-
+    Timer timer;
 };
 
 #endif

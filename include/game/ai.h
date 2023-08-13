@@ -4,6 +4,29 @@
 #include "map.h"
 
 class FightUnit;
+class BaseBuff;
+
+enum class hurt_t
+{
+    attack,
+    buff,
+    skill,
+};
+
+enum class hurt_sub_t
+{
+    normal,
+    real,
+
+};
+
+enum class action_state
+{
+    none = -1,
+    attack,
+    move,
+    skill,
+};
 
 /*
     ai 只包含，寻路，目标寻找、攻击、释放技能
@@ -11,12 +34,11 @@ class FightUnit;
 class AiBase : public Actor
 {
 public:
-    // 平 a 
-    void attack(FightUnit *);
-    // 移动
-    bool move(FightUnit *);
-    // 释放技能
-    void perform_skill(FightUnit *);
+    virtual void update(float deltaTime);
+    virtual Object * clone() { return new AiBase; };
+    virtual Object * clone_and_clean() { return clone(); };
+    
+public:
     // 更新目标
     void update_target(FightUnit *);
     // 寻找目标
@@ -28,21 +50,26 @@ public:
     // 更新路径
     void update_path(FightUnit *);
 
-private:
-    // 目标消失
-    bool is_target_miss();
-    // 能否攻击
-    bool can_attack(FightUnit *);
-    // 能否移动
-    bool can_move(FightUnit *);
-    // 是否被控制住了，击飞，眩晕，禁锢
-    bool is_control(FightUnit *);
-    // 是否可以释放技能
-    bool can_perform_skill(FightUnit *);
+public:
+    // 造成伤害的统一接口
+    void perform_hurt(hurt_t, hurt_sub_t, FightUnit *from, FightUnit *to, float demage);
+    // 平 a 
+    void attack(FightUnit *);
+    // 移动
+    void move(FightUnit *);
+    // 释放技能
+    void perform_skill(FightUnit *);
+    // buff
+    void buff_action(FightUnit *unit);
+
+public:
+    void change_state(action_state _state) { this->_state = _state; }
 
 private:
-    FightUnit *target;
-    GameMap *map;
+    action_state _state = action_state::none;
+    FightUnit *target = nullptr;
+    GameMap *map = nullptr;
+    float deltaTime = 0;
 };
 
 #endif

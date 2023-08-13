@@ -4,6 +4,9 @@
 
 REGISTER_TYPE("add_hp_buff", AddHpBuff);
 
+AddHpBuff::AddHpBuff() : BaseBuff(buff_type::hp), add_amount(0)
+{}
+
 Object * AddHpBuff::clone()
 {
     return new AddHpBuff();
@@ -13,9 +16,6 @@ Object * AddHpBuff::clone_and_clean()
 {
     return new AddHpBuff();
 }
-
-AddHpBuff::AddHpBuff() : BaseBuff(buff_type::hp), add_amount(0)
-{}
 
 void AddHpBuff::calc(FightUnit *unit)
 {

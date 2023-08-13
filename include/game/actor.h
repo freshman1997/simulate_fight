@@ -12,10 +12,8 @@ struct Vector2
 class Actor : public Object
 {
 public:
-    virtual void update() {}
+    virtual void update(float deltaTime) {}
     virtual ~Actor() {}
-    virtual Object * clone() = 0;
-    virtual Object * clone_and_clean() = 0;
     
 public:
     int id = 0;

@@ -1,7 +1,7 @@
 ﻿#include "game/equips/WuJinZhiRen.h"
 #include "game/hero.h"
 
-void WuJinZhiRen::update()
+void WuJinZhiRen::update(float deltaTime)
 {
 
 }
