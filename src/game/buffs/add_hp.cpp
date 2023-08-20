@@ -4,7 +4,7 @@
 
 REGISTER_TYPE("add_hp_buff", AddHpBuff);
 
-AddHpBuff::AddHpBuff() : BaseBuff(buff_type::hp), add_amount(0)
+AddHpBuff::AddHpBuff() : add_amount(0)
 {}
 
 Object * AddHpBuff::clone()

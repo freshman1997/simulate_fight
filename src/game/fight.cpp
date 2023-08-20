@@ -1,6 +1,6 @@
 ﻿#include "game/fight.h"
 
-Fight::Fight() : started(false), error(false)
+Fight::Fight() : started(false), error(false), win_side(-1), rest_heros(0)
 {}
 
 void Fight::update(float deltaTime)
@@ -53,18 +53,26 @@ void Fight::random_units()
     }
 }
 
-void Fight::fight()
+bool Fight::is_end()
 {
-    
-}
+    if (win_side >= 0) return true;
 
-void Fight::round(FightUnit *unit)
-{
-   
+    int count1 = 0, count2 = 0;
+    for (auto &it : fight_actors) {
+        if (it->side && it->is_die()) {
+            ++count1;
+        } else {
+            count2 = it->is_die() ? count2 + 1 : count2;
+        }
+    }
 
-}
+    if (count1 == player1.size()) {
+        this->win_side = 0;
+    }
 
-bool Fight::is_end() const
-{
-    return false;
+    if (count2 == player2.size()) {
+        this->win_side = 1;
+    }
+
+    return win_side >= 0;
 }

@@ -7,24 +7,85 @@ bool BuffCfg::load()
     return true;
 }
 
-bool BuffCfg::load_config(json &json_data)
+bool BuffCfg::parse_buff_cfg(json &json_data)
 {
     if (!json_data.is_object()) {
         return false;
     }
 
-    for (auto &[key, val] : json_data.items()) {
-        if (key.empty()) {
-            return false;
+    for (auto &it : json_data) {
+        Buff buf;
+        buf.id = -1;
+        if (it["id"].is_number_integer()) {
+            buf.id = it["id"];
         }
 
-        if (!val.is_object()) {
-            return false;
+        buf.type = buff_type::none;
+        if (it["type"].is_number_integer()) {
+            buf.type = (buff_type)it["type"];
         }
 
-        int t = val["sub_type"];
-        std::cout << key << ": " << val["sub_type"] << std::endl;
+        buf.subtype = buff_sub_type::none;
+        if (it["sub_type"].is_number_integer()) {
+            buf.subtype = (buff_sub_type)it["sub_type"];
+        }
+        
+        buf.functype = buff_func_type::none;
+        if (it["func_type"].is_number_integer()) {
+            buf.functype = (buff_func_type)it["func_type"];
+        }
+        
+        buf.trigger_cond = buff_trigger_condition::none;
+        if (it["trigger_condition"].is_number_integer()) {
+            buf.trigger_cond = (buff_trigger_condition)it["trigger_condition"];
+        }
+
+        buf.trigger_time = -1;
+        if (it["trigger_condition"].is_number_integer()) {
+            buf.trigger_time = it["trigger_condition"];
+        }
+
+        buf.trigger_rate = 0;
+        if (it["trigger_rate"].is_array()) {
+            if (it["trigger_rate"].size() == 2) {
+                buf.trigger_rate = 1.0f * it["trigger_rate"][0].get<int>() / it["trigger_rate"][0].get<int>();
+            } else {
+                // TODO
+            }
+        }
+
+        buf.die_keep = -1;
+        if (it["keep"].is_number_integer()) {
+            buf.die_keep = it["keep"];
+        }
+
+        buf.choose_rule = buff_target_choose_rule::none;
+        if (it["target_choose_rule"].is_number_integer()) {
+            buf.choose_rule = (buff_target_choose_rule)it["target_choose_rule"];
+        }
+
+        buf.target_amount = -1;
+        if (it["target_amount"].is_number_integer()) {
+            buf.target_amount = it["target_amount"];
+        }
+
+        buf.sort_type = buff_target_sort_type::none;
+        if (it["sort_type"].is_number_integer()) {
+            buf.sort_type = (buff_target_sort_type)it["sort_type"];
+        }
+
+        if (it["impl_name"].is_string()) {
+            buf.impl_name = it["impl_name"];
+        }
+
+        this->buffs[buf.id] = buf;
     }
 
     return true;
+}
+
+const Buff * BuffCfg::get_buff(int id)
+{
+    auto it = this->buffs.find(id);
+    return it == this->buffs.end() ? nullptr : &it->second;
 }

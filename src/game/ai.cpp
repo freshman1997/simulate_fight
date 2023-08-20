@@ -14,7 +14,7 @@
 void AiBase::update(float deltaTime)
 {
     this->deltaTime = deltaTime;
-    buff_action(target);
+    target->buff_action();
     
     switch (_state)
     {
@@ -84,13 +84,9 @@ void AiBase::move(FightUnit *unit)
 // 释放技能
 void AiBase::perform_skill(FightUnit *unit)
 {
+    if (!unit->can_perform_skill()) return;
 
-}
-
-// 生效buff
-void AiBase::buff_action(FightUnit *unit)
-{
-
+    unit->skill->update(this->deltaTime);
 }
 
 //---------------- helper ----------------//

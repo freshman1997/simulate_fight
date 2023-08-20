@@ -23,14 +23,11 @@ public:
     void clear_cache();
     // 进入战斗前激活已存在的buff，如海克斯、羁绊、装备的加成等
     void pre_enable_buffs();
-    void fight();
-    void round(FightUnit *);
-
     void random_units();
     
 public:
     void push_fight_unit(FightUnit *, bool);
-    bool is_end() const;
+    bool is_end();
 public:
     std::vector<FightUnit *> player1;
     std::vector<FightUnit *> player2;
@@ -39,6 +36,8 @@ public:
     Game *game;
     bool started;
     bool error;
+    int win_side;
+    int rest_heros;     // 结束后胜利方剩余单位数
 };
 
 #endif

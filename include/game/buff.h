@@ -3,64 +3,62 @@
 #include "actor.h"
 
 class FightUnit;
+struct Buff;
 
-enum class buff_type : unsigned char
+enum class buff_type : char
 {
-    none = 0,
+    none = -1,
     hp,
 };
 
-enum class buff_sub_type : unsigned char
+enum class buff_sub_type : char
 {
     none = 0,
 };
 
-enum class buff_func_type : unsigned char
+enum class buff_func_type : char
 {
     none = 0,
 };
 
-enum class buff_trigger_condition : unsigned char
+enum class buff_trigger_condition : char
 {
     none = 0,
 };
 
-enum class buff_target_choose_rule : unsigned char
+enum class buff_target_choose_rule : char
 {
     none = 0,
 };
 
-enum class buff_target_sort_type : unsigned char
+enum class buff_target_sort_type : char
 {
     none = 0,
 };
 
-enum class add_type
+enum class add_type : char
 {
     
 };
 
-class BaseBuff : public Actor
+class BuffBase : public Actor
 {
 public:
-    BaseBuff() : BaseBuff(buff_type::none){}
-    BaseBuff(buff_type t) : type(t), infinite(false) {}
+    virtual void update(float deltaTime);
+    virtual Object * clone();
+    virtual Object * clone_and_clean();
+    virtual void calc(FightUnit *);
 
-    virtual Object * clone() = 0;
-    virtual Object * clone_and_clean() = 0;
-    virtual void calc(FightUnit *) = 0;
-
-    virtual void on_add() {}
+    virtual void on_add() { buff_time = 0; }
     virtual void on_remove() {}
+    void reset();
+    void free();
 
 public:
-    bool infinite;
-    buff_type type;
-    FightUnit *from;
-    FightUnit *to;
-    float param1;
-    float param2;
-    float param3;
+    const Buff *buff_cfg = nullptr;
+    FightUnit *from = nullptr;
+    FightUnit *to = nullptr;
+    float buff_time = 0;
 };
 
 #endif

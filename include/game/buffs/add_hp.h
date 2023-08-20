@@ -3,7 +3,7 @@
 
 #include "../buff.h"
 
-class AddHpBuff : public BaseBuff
+class AddHpBuff : public BuffBase
 {
 public:
     virtual Object * clone();

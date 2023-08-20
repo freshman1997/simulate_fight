@@ -7,8 +7,9 @@
 // 事件类型定义
 enum class EventType : unsigned char
 {
-    HERO_HP_DEC,
-    HERO_DIE,
+    UNIT_DIE,               // 死亡
+    UNIT_ATTACK,            // 攻击
+    UNIT_HURT,              // 受到伤害
     
 };
 

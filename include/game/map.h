@@ -63,7 +63,7 @@ public:
 
 private:
 
-    class MapHolder;
+    struct MapHolder;
 
 	// 斜边长度
 	float hex_diagonallength(const HexCube& cube)

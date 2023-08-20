@@ -24,7 +24,7 @@ Game::Game() : round(0), pause(false), start_time(0), state(GameState::none), ct
 	const CfgManager &mgr = CfgManager::get_instance();
 	frame_rate = mgr.game_cfg.get_frame_rate();
 	quick_frame_rate = mgr.game_cfg.get_quick_frame_rate();
-	cur_frame_time = FRAME(frame_rate);
+	cur_frame_time = (int)FRAME(frame_rate);
 	round_end_count = 0;
 	state_pass_time = 0;
 }
@@ -138,7 +138,7 @@ void Game::game_loop()
 	}
 
 	if (state == GameState::fight) {
-		bool result = this->update(next_time);
+		bool result = this->update((float)FRAME(normal_rate));
 		if (!result && !pause) {
 			end_game();
 			return;
@@ -205,8 +205,8 @@ void Game::start_pve()
 	on_fight = true;
 }
 
-float Game::get_frame_time()
+int Game::get_frame_time()
 {
-	return !normal_rate ? FRAME(frame_rate) : FRAME(quick_frame_rate);
+	return (int)(!normal_rate ? FRAME(frame_rate) : FRAME(quick_frame_rate));
 }
 

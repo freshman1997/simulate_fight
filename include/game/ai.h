@@ -4,7 +4,7 @@
 #include "map.h"
 
 class FightUnit;
-class BaseBuff;
+class BuffBase;
 
 enum class hurt_t
 {
@@ -59,8 +59,6 @@ public:
     void move(FightUnit *);
     // 释放技能
     void perform_skill(FightUnit *);
-    // buff
-    void buff_action(FightUnit *unit);
 
 public:
     void change_state(action_state _state) { this->_state = _state; }

@@ -2,7 +2,6 @@
 #define __SKILL_CFG_H__
 #include <vector>
 #include "cfg.h"
-#include "game/skill.h"
 
 struct SkillBuff
 {
@@ -13,8 +12,11 @@ struct SkillBuff
 struct Skill
 {
     int skill_id;
-    skill_type type;
-    skill_perform_type perform_type;
+    int type;
+    int perform_type;
+    int distance;
+    int skill_time;
+    int skill_sing_time;
     std::vector<SkillBuff> buffs;
     std::string name;
     std::string impl_name;
@@ -24,6 +26,11 @@ class SkillCfg : public CfgBase
 {
 public:
     virtual bool load();
+    bool parse_skill(json &doc);
+    const Skill * get_skill(int id);
+
+private:
+    std::unordered_map<int, Skill> skills;
 };
 
 #endif

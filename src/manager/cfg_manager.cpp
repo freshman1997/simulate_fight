@@ -6,6 +6,8 @@ CfgManager::CfgManager()
 {
     __REGISTER_CFG__(buff_cfg)
     __REGISTER_CFG__(game_cfg)
+    __REGISTER_CFG__(skill_cfg)
+    __REGISTER_CFG__(hero_cfg)
 }
 
 CfgManager & CfgManager::get_instance()

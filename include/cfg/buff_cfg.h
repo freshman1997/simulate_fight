@@ -4,7 +4,7 @@
 #include "cfg.h"
 #include "game/buff.h"
 
-struct buff_cfg_t
+struct Buff
 {
     int id;
     buff_type type;
@@ -17,6 +17,7 @@ struct buff_cfg_t
     buff_target_choose_rule choose_rule;
     int target_amount;
     buff_target_sort_type sort_type;
+    int lasting;
     std::string impl_name;
 };
 
@@ -26,7 +27,11 @@ public:
     virtual bool load();
 
 public:
-    bool load_config(json &);
+    bool parse_buff_cfg(json &);
+    const Buff * get_buff(int id);
+
+private:
+    std::unordered_map<int, Buff> buffs;
 };
 
 #endif

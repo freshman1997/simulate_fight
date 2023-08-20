@@ -63,7 +63,7 @@ public:
     std::vector<HeroBase *> holderHeros;    // 备战区的棋子
 };
 
-#define FRAME(frame_rate) (1.0 / frame_rate * 1000)
+#define FRAME(frame_rate) (1.0f / frame_rate * 1000)
 class Timer;
 
 // 单场比赛对象
@@ -91,7 +91,7 @@ private:
     void clear_cache();
 
 public:
-    float get_frame_time();
+    int get_frame_time();
     bool is_all_fight_end();
 
 public:
@@ -106,7 +106,7 @@ public:
     int state_pass_time;                        // 当前状态已经过去的时间
     int frame_rate;                             // 帧率
     int quick_frame_rate;                       // 2倍速
-    float cur_frame_time;                       // 当前帧率
+    int cur_frame_time;                         // 当前帧率
     bool normal_rate;                           // 是否处于加速状态
     int next_time;                              // 下次执行间隔时间
     GameState state;                            // 游戏当前阶段
