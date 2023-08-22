@@ -14,7 +14,28 @@ class SkillBase;
 class EquipBase;
 class Fight;
 
-#define add_xx(xx) void add_##xx(int num) { this->xx += num; }
+#define add_xx(xx, _type) void add_##xx(_type num) \
+{ \
+    this->xx = this->on_value_change<_type>(this->xx, num, ListenType::xx); \
+\
+}
+
+enum class ListenType
+{
+    none = -1,
+    hp,
+    mp,
+    atk_val,
+    ap_val,
+    atk_speed,
+    ad_def_val,
+    ap_def_val,
+    critical_rate,
+    critical_extra,
+    atk_distance,
+    move_speed,
+    stuck,
+};
 
 class FightUnit : public Actor
 {
@@ -59,17 +80,70 @@ public:
     }
 
 public:
-    add_xx(hp)
-    add_xx(mp)
-    add_xx(atk_val)
-    add_xx(ap_val)
-    add_xx(atk_speed)
-    add_xx(ad_def_val)
-    add_xx(ap_def_val)
-    add_xx(critical_rate)
-    add_xx(critical_extra)
-    add_xx(atk_distance)
-    add_xx(move_speed)
+    add_xx(hp, int)
+    add_xx(mp, int)
+    add_xx(atk_val, int)
+    add_xx(ap_val, int)
+    add_xx(atk_speed, float)
+    add_xx(ad_def_val, int)
+    add_xx(ap_def_val, int)
+    add_xx(critical_rate, int)
+    add_xx(critical_extra, int)
+    add_xx(atk_distance, int)
+    add_xx(move_speed, int)
+    add_xx(stuck, bool)
+
+    template<class T>
+    void register_handler(T *handler)
+    {
+        static_assert(std::is_base_of<ValueHandler, T>::value, "T must base of ValueHandler");
+        if (!handler || handler->listen == ListenType::none) return;
+
+        handlers[handler->listen].push_back(handler);
+    }
+
+    template<class T>
+    T on_value_change(T base, T add, ListenType type)
+    {
+        Value val;
+        if (std::is_same<int, T>::value) {
+            val.type = ValueType::int_val;
+            val.base_val.ival = int(base);
+            val.change_val.ival = int(add);
+        } else if (std::is_same<float, T>::value) {
+            val.type = ValueType::float_val;
+            val.base_val.fval = float(base);
+            val.change_val.fval = float(add);
+        } else if (std::is_same<double, T>::value) {
+            val.type = ValueType::double_val;
+            val.base_val.dval = double(base);
+            val.change_val.dval = double(add);
+        } else if (std::is_same<bool, T>::value) {
+            val.type = ValueType::bool_val;
+            val.base_val.bval = base;
+            val.change_val.bval = add;
+        }
+
+        auto it = handlers.find(type);
+        if (it == handlers.end()) {
+            if (std::is_same<bool, T>::value) {
+                return add;
+            }
+
+            return base + add;
+        }
+
+        for (auto h = it->second.begin(); h != it->second.end();) {
+            (*h)->on_value_changed(val);
+            if ((*h)->remove()) {
+                h = it->second.erase(h);
+            } else {
+                ++h;
+            }
+        }
+
+        return val.get_value<T>();
+    }
 
 public:
     int side = 0;               // 用于战斗期间
@@ -111,6 +185,9 @@ public:
     // 装备列表，包括散件和成装
     std::unordered_map<int, EquipBase *> equipments;
     std::unordered_map<int, BuffBase *> buffs;
+
+private:
+    std::unordered_map<ListenType, std::list<ValueHandler *>> handlers;
 };
 
 // 英雄

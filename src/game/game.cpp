@@ -138,7 +138,7 @@ void Game::game_loop()
 	}
 
 	if (state == GameState::fight) {
-		bool result = this->update((float)FRAME(normal_rate));
+		bool result = this->update((float)FRAME(frame_rate));
 		if (!result && !pause) {
 			end_game();
 			return;

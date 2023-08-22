@@ -72,7 +72,7 @@ void HeroBase::attack()
 start:
     switch (atk_state) {
         case attack_state::prepare: {
-            int atk_speed = calc_atk_speed();
+            float atk_speed = calc_atk_speed();
             if (atk_time >= atk_speed) {
                 atk_state = attack_state::before;
             }
