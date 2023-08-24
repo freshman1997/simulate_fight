@@ -1,18 +1,17 @@
 ﻿#include "game/event/event.h"
 
-EventManager & EventManager::get_instance()
+EventManager::EventManager()
 {
-    static EventManager mgr;
-    return mgr;
+    this->functors.clear();
 }
 
-void EventManager::register_event(EventType type, std::function<void (EventParams)> func)
+void EventManager::register_event(EventType type, std::function<void (const EventParams &)> func)
 {
     auto &list = this->functors[type];
     list.push_back(func);
 }
 
-void EventManager::on_trigger_event(EventType type, const EventParams &params)
+void EventManager::trigger_event(EventType type, const EventParams &params)
 {
     auto it = this->functors.find(type);
     if (it == this->functors.end()) {

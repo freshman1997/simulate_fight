@@ -3,8 +3,21 @@
 #include "game/equip.h"
 #include "game/event/event.h"
 #include "manager/object_manager.hpp"
+#include "game/game.h"
+#include "game/fight.h"
 
 REGISTER_TYPE("hero_base", HeroBase)
+
+void FightUnit::trigger_event(EventType type, const EventParams &params)
+{
+    this->round_obj->game->ev_manager->trigger_event(type, params);
+}
+    
+void FightUnit::register_event(EventType type, std::function<void (const EventParams &)> func)
+{
+    this->round_obj->game->ev_manager->register_event(type, func);
+}
+
 
 Object * HeroBase::clone()
 {

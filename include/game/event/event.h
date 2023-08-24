@@ -30,14 +30,12 @@ public:
 class EventManager
 {
 public:
-    static EventManager & get_instance();
-    void register_event(EventType, std::function<void (EventParams)>);
-    void on_trigger_event(EventType, const EventParams &); 
+    EventManager();
+    void register_event(EventType, std::function<void (const EventParams &)>);
+    void trigger_event(EventType, const EventParams &); 
 
 private:
     std::unordered_map<EventType, std::list<std::function<void (const EventParams &)>>> functors;
 };
-
-#define REGISTER_EVENT(type, func) EventManager::get_instance().register_event(type, func)
 
 #endif

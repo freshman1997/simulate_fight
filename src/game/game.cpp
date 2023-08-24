@@ -19,7 +19,7 @@ void GamePlayer::defeat(int rest_heros)
 }
 
 //----------------------- game -------------------------//
-Game::Game() : round(0), pause(false), start_time(0), state(GameState::none), ctx(nullptr), state_start_time(0), on_fight(false), normal_rate(false), next_time(0)
+Game::Game() : round(0), pause(false), start_time(0), state(GameState::none), state_start_time(0), on_fight(false), normal_rate(false), next_time(0)
 {
 	const CfgManager &mgr = CfgManager::get_instance();
 	frame_rate = mgr.game_cfg.get_frame_rate();

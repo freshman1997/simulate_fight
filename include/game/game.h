@@ -16,11 +16,11 @@ enum class GameState
 };
 
 class HeroBase;
-class FightContext;
 class Fight;
 class EquipBase;
 class InputCommandBuffQueue;
 class OutputFrameBuffQueue;
+class EventManager;
 
 struct EquipHolder
 {
@@ -111,13 +111,13 @@ public:
     int next_time;                              // 下次执行间隔时间
     GameState state;                            // 游戏当前阶段
     GamePlayer players[8];                      // 当前场次的玩家
-    FightContext *ctx;                          // 当前场次的上下文
     long long state_start_time;                 // 开始战斗时间点
     bool on_fight;                              // 是否处于战斗状态
     std::vector<Fight *> round_objects;         // 战斗回合对象, 最多8个，最少1个
     InputCommandBuffQueue *input;               // 输入队列
     OutputFrameBuffQueue *output;               // 输出队列
     Timer *timer = nullptr;                     // 定时器对象
+    EventManager *ev_manager = nullptr;         // 事件管理器
 };
 
 #endif

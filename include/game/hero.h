@@ -7,7 +7,8 @@
 #include "actor.h"
 #include "game/actor.h"
 #include "cfg/hero_cfg.h"
-#include "game/buff.h"
+#include "buff.h"
+#include "event/event.h"
 
 class AiBase;
 class SkillBase;
@@ -142,10 +143,36 @@ public:
             }
         }
 
-        return val.get_value<T>();
+        T res = std::move(val.get_value<T>());
+
+        post_process<T>(res, type);
+
+        return res;
+    }
+
+    template<class T>
+    void post_process(T &res, ListenType type)
+    {
+        switch (type)
+        {
+        case ListenType::hp: {
+            if (int(res) <= 0) {
+                trigger_event(EventType::UNIT_DIE, {});
+            }
+            break;
+        }
+        
+        default:
+            break;
+        }
     }
 
 public:
+    void trigger_event(EventType type, const EventParams &);
+    void register_event(EventType, std::function<void (const EventParams &)>);
+
+public:
+    int player_id = 0;
     int side = 0;               // 用于战斗期间
     float rest_time = 0;        // 上一帧不够动作剩余时间
 
