@@ -27,4 +27,5 @@ target_link_libraries(test_json gtest gtest_main)
 add_test(NAME test_add COMMAND test_add)
 add_test(NAME test_json COMMAND test_json)
 
-add_executable(fight ${GAME_SRC}) 
+add_executable(fight ${GAME_SRC} main.cpp) 
+target_link_libraries(fight PUBLIC lua5.4)

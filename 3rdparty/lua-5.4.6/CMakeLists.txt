@@ -3,17 +3,21 @@ project(lua5.4)
 
 AUX_SOURCE_DIRECTORY(./src/ ALL_SRC)
 INCLUDE_DIRECTORIES(./src/)
-message(${ALL_SRC})
 
 SET(LIB_SRC ${ALL_SRC})
-LIST(REMOVE_ITEM LIB_SRC lua.c luac.c)
+LIST(REMOVE_ITEM LIB_SRC ./src//lua.c ./src//luac.c)
 
-ADD_LIBRARY(lua ${LIB_SRC})
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ../../../build/lib)
+set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS on)
 
-ADD_EXECUTABLE(luaexec ./src/lua.c)
-target_link_libraries(luaexec lua)
-set_target_properties(luaexec PROPERTIES OUTPUT_NAME lua)
+#ADD_LIBRARY(${PROJECT_NAME} ${LIB_SRC})
+add_library(${PROJECT_NAME} SHARED ${LIB_SRC})
 
-add_executable(luac ./src/luac.c)
+#ADD_EXECUTABLE(luaexec ./src/lua.c)
+#target_link_libraries(luaexec lua)
+#set_target_properties(luaexec PROPERTIES OUTPUT_NAME lua)
 
-target_link_libraries(luac lua)
+#add_executable(luac ./src/luac.c)
+
+#target_link_libraries(luac lua)

@@ -8,6 +8,7 @@
 #include "timer/timer.h"
 #include "manager/cfg_manager.h"
 #include "server/game_server.h"
+#include "script/lua_adapter.h"
 
 using namespace std;
 
@@ -27,6 +28,9 @@ extern void Test_AStar();
 
 int main()
 {
+    LuaInterpreter li;
+    li.excute_file("../../lua_source/test.lua");
+
     if (!pre_start()) {
         return -1;
     }
