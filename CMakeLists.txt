@@ -12,12 +12,11 @@ include_directories(include/ 3rdparty/gtest/googletest/include 3rdparty/json/inc
 
 FILE(GLOB_RECURSE GAME_SRC "./src/*.cpp")
 
-FILE(GLOB_RECURSE LUA_SRC "./3rdparty/lua-5.4.6/src/*.c")
-
 enable_testing()
 
 add_subdirectory(3rdparty/gtest)
 add_subdirectory(3rdparty/json)
+add_subdirectory(3rdparty/lua-5.4.6)
 
 add_executable(test_add tests/test1.cpp)
 target_link_libraries(test_add gtest gtest_main)
