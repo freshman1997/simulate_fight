@@ -61,6 +61,8 @@ public:
 
 	float distance(FightUnit *unit);
 
+	std::vector<Vector2> find_path(Vector2 from, Vector2 to);
+
 private:
 
     struct MapHolder;
