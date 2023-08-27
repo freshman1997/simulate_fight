@@ -9,6 +9,7 @@
 #include "manager/cfg_manager.h"
 #include "server/game_server.h"
 #include "script/lua_adapter.h"
+#include "game/map.h"
 
 using namespace std;
 
@@ -28,8 +29,10 @@ extern void Test_AStar();
 
 int main()
 {
+    GameMap m;
+    m.find_path({0, 0}, {1, 1});
     LuaInterpreter li;
-    li.excute_file("../../lua_source/test.lua");
+    li.excute_file("../lua_source/test.lua");
 
     if (!pre_start()) {
         return -1;

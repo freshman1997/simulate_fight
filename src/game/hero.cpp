@@ -52,6 +52,8 @@ void HeroBase::set_properties(HeroBase *)
 
 void HeroBase::update(float deltaTime)
 {
+    if (stuck) return;
+    
     this->delta = deltaTime;
     this->ai->update(deltaTime);
 }
@@ -127,7 +129,7 @@ void HeroBase::on_being_attack()
 void HeroBase::buff_action()
 {
     for (auto it = buffs.begin(); it != buffs.end(); ++it) {
-        (it->second)->update(delta);
+        it->second->update(delta);
     }
 }
 

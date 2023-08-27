@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <vector>
 #include <string>
+#include <list>
 
 #include "actor.h"
 #include "game/actor.h"
@@ -18,7 +19,6 @@ class Fight;
 #define add_xx(xx, _type) void add_##xx(_type num) \
 { \
     this->xx = this->on_value_change<_type>(this->xx, num, ListenType::xx); \
-\
 }
 
 enum class ListenType
