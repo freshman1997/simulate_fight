@@ -7,8 +7,6 @@ void SkillBase::update(float deltaTime)
 {
     // 这个标志由外部修改
     if (state == skill_state::stuck) {
-        start_time = 0;
-        singing_time = 0;
         return;
     }
 
@@ -53,9 +51,9 @@ bool SkillBase::can_perform()
 {
     if (this->state == skill_state::prepare && (skill_perform_type)skill_cfg->perform_type == skill_perform_type::mp) {
         return owner->mp >= owner->hero_cfg->mp[owner->star];
-    }  
+    }
 
-    return false;
+    return this->state > skill_state::prepare && this->state < skill_state::stuck;
 }
 
 bool SkillBase::find_targets()
@@ -74,10 +72,6 @@ void SkillBase::perform(float deltaTime, bool first)
 
 void SkillBase::perform_skill(float deltaTime, bool first)
 {
-    if (first) {
-        this->owner->ai->change_state(action_state::skill);
-    }
-
     perform(deltaTime, first);
 }
 
@@ -92,6 +86,8 @@ void SkillBase::on_end()
 void SkillBase::break_skill()
 {   
     state = skill_state::stuck;
+    start_time = 0;
+    singing_time = 0;
     // TODO
 }
 

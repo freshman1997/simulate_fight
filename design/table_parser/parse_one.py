@@ -40,7 +40,7 @@ def translate_type(str):
         return None
 
 def parse_one(prefix, file, sheet, output):
-    app = xw.App(visible=False,add_book=False)
+    app = xw.App(visible=True,add_book=False)
     wb = app.books.open(prefix + "/" + file)
     sh = wb.sheets[sheet]
 
@@ -141,6 +141,6 @@ def parse_one(prefix, file, sheet, output):
     f.write(json_doc)
     f.close()
 
-    app.quit()
+    app.kill()
     
     return True

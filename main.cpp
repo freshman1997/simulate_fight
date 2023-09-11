@@ -29,10 +29,10 @@ extern void Test_AStar();
 
 int main()
 {
-    GameMap m;
-    m.find_path({0, 0}, {1, 1});
-    LuaInterpreter li;
-    li.excute_file("../lua_source/test.lua");
+    //GameMap m;
+    //m.find_path({0, 0}, {1, 1});
+    LuaAdapter la;
+    la.excute_file("../lua_source/test.lua");
 
     if (!pre_start()) {
         return -1;

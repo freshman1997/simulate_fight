@@ -73,6 +73,16 @@ bool GameCfg::parse_phase(json &doc)
     return true;
 }
 
+bool GameCfg::parse_pve_monster(json &json)
+{
+    return true;
+}
+
+bool GameCfg::parse_level_config(json &json)
+{
+    return true;
+}
+
 int GameCfg::get_frame_rate() const
 {
     return misc.frame_rate;
@@ -83,8 +93,14 @@ int GameCfg::get_quick_frame_rate() const
     return misc.quick_frame_rate;
 }
 
-const game_phase * GameCfg::get_phase(int id) const
+const game_phase * GameCfg::get_phase(int id)
 {
     auto it = this->phases.find(id);
     return it == this->phases.end() ? nullptr : &it->second;
+}
+
+const pve_monster * GameCfg::get_pve_monster(int id)
+{
+    auto it = this->pve_monsters.find(id);
+    return it == this->pve_monsters.end() ? nullptr : &it->second;
 }

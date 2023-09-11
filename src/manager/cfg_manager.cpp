@@ -8,6 +8,8 @@ CfgManager::CfgManager()
     __REGISTER_CFG__(game_cfg)
     __REGISTER_CFG__(skill_cfg)
     __REGISTER_CFG__(hero_cfg)
+    __REGISTER_CFG__(equip_cfg)
+    __REGISTER_CFG__(lottery_cfg)
 }
 
 CfgManager & CfgManager::get_instance()

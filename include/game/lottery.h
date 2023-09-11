@@ -6,14 +6,22 @@
 class LotteryHelper
 {
 public:
-    // 单次花钱刷新
-    std::vector<int> lottery(int lv);
+    LotteryHelper();
+
+    void init_pool();
+
+public:
+    // 抽卡
+    std::vector<int> lottery_heros(int lv, int amount);
+
+    // 抽装备
+    inline std::vector<int> lottery_equips(int amount);
 
     // 选秀, 下标为第几个，<id, 装备id列表>
-    std::vector<std::pair<int, std::vector<int>>> lottery_xuanxiu(int amount, int equips, int phase);
+    std::vector<std::pair<int, std::vector<int>>> lottery_xuanxiu(int amount, int equips, int extra_equips, int phase);
 
     // 海克斯潘多拉备战席
-    std::vector<int> lottery_3();
+    std::vector<int> lottery_candidate_hero(const std::vector<int> &heros);
 
     // 海克斯，潘多拉装备
     std::vector<int> lottery_equip();
@@ -30,15 +38,16 @@ public:
     // 随机一个范围内的数值
     int rand_num(int max_amount);
 
-public:
-    // 合成卡
-    void compound();
-    // 卖掉卡
-    void release();
+    // 是否命中
+    bool rand_one(float ratio);
 
 public:
-    // 下标是卡费，值是剩余数量
-    std::vector<int>  pool;
+    // 卖掉卡
+    void release(int hero_id, int star);
+
+public:
+    // 下标是卡费，值是卡牌对应剩余数量
+    std::vector<std::unordered_map<int, int>>  pool;
 };
 
 

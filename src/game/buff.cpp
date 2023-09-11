@@ -18,7 +18,6 @@ Object * BuffBase::clone_and_clean()
 void BuffBase::update(float deltaTime)
 {
     if (buff_cfg->lasting <= 0) {
-        calc(to);
         to->on_buff_end(this);
         free();
         return;
@@ -26,24 +25,53 @@ void BuffBase::update(float deltaTime)
 
     buff_time += deltaTime;
     if (buff_time >= buff_cfg->lasting) {
-        calc(to);
         to->on_buff_end(this);
         free();
     }
 }
 
-void BuffBase::calc(FightUnit *unit)
-{
-   
+void BuffBase::on_add() 
+{ 
+    buff_time = 0;
+    if (!this->to) {
+        return;
+    }
+
+    trigger_time = buff_cfg->trigger_time;
+    if (this->buff_cfg->param_type == buff_param_type::percent) {
+        switch (this->buff_cfg->functype) {
+            case buff_func_type::hp: {
+                if (!params.empty()) {
+                    float real_amount = this->to->max_hp * params[0];
+                    params.insert(params.begin(), real_amount);
+                }
+            }
+            case buff_func_type::mp: {
+                if (!params.empty()) {
+                    float real_amount = this->to->max_mp * params[0];
+                    params.insert(params.begin(), real_amount);
+                }
+            }
+            default: break;
+        }
+    }
+
+    to->trigger_event(EventType::UNIT_ADD_BUFF, {this});
+}
+
+void BuffBase::on_remove() 
+{ 
+    reset();
+    to->trigger_event(EventType::UNIT_RM_BUFF, {this});
 }
 
 void BuffBase::free()
 {
-
+    ObjectManager::get_instance().release_object(this);
 }
 
 void BuffBase::reset()
 {
-    
+    params.clear();
 }
 

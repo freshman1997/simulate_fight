@@ -1,6 +1,7 @@
 ﻿#ifndef __HERO_CFG_H__
 #define __HERO_CFG_H__
 #include "cfg.h"
+#include <functional>
 
 struct Hero
 {
@@ -19,10 +20,13 @@ struct Hero
     int skill_id;                                               // 技能id
     int max_star;                                               // 最大星级
     int gold;                                                   // 费率
+    int card_amount;                                            // 卡池中的数量
+    int cover_size[2];                                          // 占地面积
     std::unordered_map<int, std::pair<int, int>> merge;         // 合成高一费卡所需，2 -> 1, 3
-    std::string desc;
+    std::string desc;                                           // 描述
     std::vector<int> careers;                                   // 羁绊/职业列表
-    std::string name;
+    std::string name;                                           // 名字
+    std::string impl_name;                                      // 实现对象名称
 };
 
 class HeroCfg : public CfgBase
@@ -34,6 +38,8 @@ public:
 
     const Hero * get_hero(int id);
     
+    void for_each_heros(std::function<bool(const Hero &)>);
+
 private:
     std::unordered_map<int, Hero> heros;
 };

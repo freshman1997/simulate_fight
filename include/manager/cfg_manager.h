@@ -2,7 +2,9 @@
 #define __CFG_MANAGER_H__
 #include <unordered_map>
 #include "cfg/buff_cfg.h"
+#include "cfg/equip_cfg.h"
 #include "cfg/game_cfg.h"
+#include "cfg/lottery_cfg.h"
 #include "cfg/skill_cfg.h"
 #include "cfg/hero_cfg.h"
 
@@ -13,6 +15,8 @@ public:
     BuffCfg buff_cfg;
     HeroCfg hero_cfg;
     SkillCfg skill_cfg;
+    EquipCfg equip_cfg;
+    LotteryCfg lottery_cfg;
 
 public:
     static CfgManager & get_instance();

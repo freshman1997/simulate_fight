@@ -19,16 +19,6 @@ bool BuffCfg::parse_buff_cfg(json &json_data)
         if (it["id"].is_number_integer()) {
             buf.id = it["id"];
         }
-
-        buf.type = buff_type::none;
-        if (it["type"].is_number_integer()) {
-            buf.type = (buff_type)it["type"];
-        }
-
-        buf.subtype = buff_sub_type::none;
-        if (it["sub_type"].is_number_integer()) {
-            buf.subtype = (buff_sub_type)it["sub_type"];
-        }
         
         buf.functype = buff_func_type::none;
         if (it["func_type"].is_number_integer()) {
@@ -54,24 +44,14 @@ bool BuffCfg::parse_buff_cfg(json &json_data)
             }
         }
 
-        buf.die_keep = -1;
+        buf.die_keep = false;
         if (it["keep"].is_number_integer()) {
             buf.die_keep = it["keep"];
-        }
-
-        buf.choose_rule = buff_target_choose_rule::none;
-        if (it["target_choose_rule"].is_number_integer()) {
-            buf.choose_rule = (buff_target_choose_rule)it["target_choose_rule"];
         }
 
         buf.target_amount = -1;
         if (it["target_amount"].is_number_integer()) {
             buf.target_amount = it["target_amount"];
-        }
-
-        buf.sort_type = buff_target_sort_type::none;
-        if (it["sort_type"].is_number_integer()) {
-            buf.sort_type = (buff_target_sort_type)it["sort_type"];
         }
 
         if (it["impl_name"].is_string()) {

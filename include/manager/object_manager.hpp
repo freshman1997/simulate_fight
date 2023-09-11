@@ -60,7 +60,7 @@ private:
 
     // 尝试 clone 一个对象, 必须要有原型才能 clone
     template<class T, bool clean>
-    Object * clone_object(std::string &tag)
+    Object * clone_object(const std::string &tag)
     {
         static_assert(std::is_base_of<Object, T>::value, "T must base from Object");
 

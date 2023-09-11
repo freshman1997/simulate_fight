@@ -1,6 +1,9 @@
 ﻿#include "game/ai.h"
+#include "game/actor.h"
 #include "game/hero.h"
 #include "game/skill.h"
+#include "game/fight.h"
+#include "game/game.h"
 
 // 战斗怎么做？
 /*
@@ -16,27 +19,13 @@ void AiBase::update(float deltaTime)
     this->deltaTime = deltaTime;
     target->buff_action();
     
-    switch (_state)
-    {
-    case action_state::attack:
-        attack(target);
-        break;
-    case action_state::move:
-        move(target);
-        break;
-    case action_state::skill:
+    if (target->can_perform_skill()) {
         perform_skill(target);
-        break;
-    default:
-        break;
+    } else if (target->can_attack()) {
+        attack(target);
+    } else if (target->can_move()) {
+        move(target);
     }
-}
-
-// 造成伤害的统一接口
-void AiBase::perform_hurt(hurt_t type, hurt_sub_t subtype, FightUnit *from, FightUnit *to, float demage)
-{
-    // TODO，计算护甲、魔抗、减伤、增伤、真实伤害、
-
 }
 
 // 平 a 
@@ -45,7 +34,7 @@ void AiBase::attack(FightUnit *unit)
     if (!unit) return;
 
     FightUnit *enemy = unit->enemy;
-    if (!enemy) return;
+    if (!enemy || unit->can_attack()) return;
 
     unit->attack();
 }
@@ -53,32 +42,28 @@ void AiBase::attack(FightUnit *unit)
 // 移动
 void AiBase::move(FightUnit *unit)
 {
-    // 这里目标消失会被修改
-    if (!unit->enemy) {
-        unit->enemy = find_target(unit);
-    } else {
-        if (unit->enemy->is_die()) {
-            update_target(unit);
-        }
+    if (!this->update_path(unit) || unit->path->empty() 
+        || unit->move_step < 0 || unit->move_step >= unit->path->size()) {
+        return;
     }
 
-    if (!unit->path) {
-        find_path(unit);
+    float incDest = unit->move_speed * 1.0 / this->target->round_obj->game->cur_frame_time;
+    unit->move_distance += incDest;
+
+    const Vector2 &next_step = unit->path->at(unit->move_step);
+    if (this->map->vector2_distance(unit->pos, next_step) > unit->move_distance) {
+        return;
     }
 
-    if (unit->skill) {
-        perform_skill(unit);
-    } else {
-        // TODO 路径变化怎么体现 ？
-        update_path(unit);
+    
+    if (!this->map->move(unit, next_step)) {
+        return;
     }
 
-    float dis = map->distance(unit);
-    if (unit->atk_distance <= dis) {
-        attack(unit);
-    }
-
-    unit->move();
+    ++unit->move_step;
+    unit->move_distance = 0l;
+    unit->pos = next_step;
+    // TODO
 }
 
 // 释放技能
@@ -106,17 +91,60 @@ FightUnit * AiBase::find_target(FightUnit *unit)
 // 强制设置目标，如嘲讽
 void AiBase::set_force_target(FightUnit *unit, FightUnit *target)
 {
+    if (unit->is_die()) {
+        return;
+    }
 
+    unit->enemy = target;
+    // TODO
 }
 
 // 寻路
-void AiBase::find_path(FightUnit *unit)
+bool AiBase::find_path(FightUnit *unit)
 {
-    
+    if (!this->map || !unit || !unit->enemy || unit->path) {
+        return false;
+    }
+
+    std::vector<Vector2> &path = *(unit->path);
+    path.clear();
+
+    this->map->find_path(unit->pos, unit->enemy->pos, path);
+    if (path.empty()) {
+        return false;
+    }
+
+    return true;
 }
 
 // 更新路径
-void AiBase::update_path(FightUnit *unit)
+bool AiBase::update_path(FightUnit *unit)
 {
-    
+    // 这里目标消失会被修改
+    bool change_target = false;
+    if (!unit->enemy) {
+        unit->enemy = find_target(unit);
+        change_target = true;
+    } else {
+        if (unit->enemy->is_die()) {
+            update_target(unit);
+            change_target = true;
+        }
+    }
+
+    if (!unit->path || change_target) {
+        bool ret = find_path(unit);
+        if (!ret) {
+            if (unit->path) {
+                // TODO 清空路径
+                unit->path->clear();
+            } 
+            return false;
+        } else {
+            unit->move_distance = 0l;
+            unit->move_step = 1;
+        }
+    }
+
+    return true;
 }

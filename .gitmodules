@@ -4,3 +4,6 @@
 [submodule "3rdparty/gtest"]
 	path = 3rdparty/gtest
 	url = https://gitclone.com/github.com/google/googletest
+[submodule "3rdparty/libev"]
+	path = 3rdparty/libev
+	url = https://github.com/enki/libev.git

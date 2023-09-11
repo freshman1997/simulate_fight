@@ -1,23 +1,24 @@
 ﻿#ifndef __BUFF_CFG_H__
 #define __BUFF_CFG_H__
-#include <vector>
 #include "cfg.h"
 #include "game/buff.h"
+#include <unordered_map>
 
 struct Buff
 {
     int id;
-    buff_type type;
-    buff_sub_type subtype;
     buff_func_type functype;
+    buff_hurt_type hurt_type;
+    buff_param_type param_type;
+    buff_property_type property;
     buff_trigger_condition trigger_cond;
+    buff_specical_trigger_cond spec_cond;
     int trigger_time;
     float trigger_rate;
     bool die_keep;
-    buff_target_choose_rule choose_rule;
     int target_amount;
-    buff_target_sort_type sort_type;
     int lasting;
+    std::unordered_map<std::string, float> properties;
     std::string impl_name;
 };
 

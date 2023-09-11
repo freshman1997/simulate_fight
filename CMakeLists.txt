@@ -8,7 +8,12 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
 endif()
 
-include_directories(include/ 3rdparty/gtest/googletest/include 3rdparty/json/include 3rdparty/lua-5.4.6/src)
+include_directories(
+    include/ 
+    3rdparty/gtest/googletest/include 
+    3rdparty/json/include 
+    3rdparty/lua-5.4.6/src
+)
 
 FILE(GLOB_RECURSE GAME_SRC "./src/*.cpp")
 
@@ -17,6 +22,11 @@ enable_testing()
 add_subdirectory(3rdparty/gtest)
 add_subdirectory(3rdparty/json)
 add_subdirectory(3rdparty/lua-5.4.6)
+
+if(UNIX)
+    include_directories(3rdparty/libev)
+    add_subdirectory(3rdparty/libev)
+endif()
 
 add_executable(test_add tests/test1.cpp)
 target_link_libraries(test_add gtest gtest_main)

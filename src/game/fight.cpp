@@ -1,7 +1,26 @@
 ﻿#include "game/fight.h"
+#include "game/map.h"
+#include "game/game.h"
 
-Fight::Fight() : started(false), error(false), win_side(-1), rest_heros(0)
+Object * Fight::clone()
+{
+    return new Fight(game);
+}
+
+Object * Fight::clone_and_clean()
+{
+    Fight *f = dynamic_cast<Fight *>(clone());
+    f->clear_cache();
+    return f;
+}
+
+Fight::Fight(Game *_game) : started(false), error(false), win_side(-1), rest_heros(0), map(new GameMap), game(_game), is_mirror(false)
 {}
+
+void Fight::clear_cache()
+{
+
+}
 
 void Fight::update(float deltaTime)
 {
@@ -27,13 +46,35 @@ void Fight::push_fight_unit(FightUnit *unit, bool atk)
     }
 }
 
+void Fight::on_fight_end()
+{
+    if (win_side < 0) {
+        return;
+    }
+
+    const std::vector<FightUnit *> &rest = win_side == 1 ? player2 : player1;
+    int sommon_amount = 0, count = 0;
+    for (auto &it : rest) {
+        if (!it->is_die()) {
+            ++count;
+        }
+    }
+
+    if (p1 && !is_mirror) {
+        p1->on_end_fight(win_side == 0, count);
+    }
+
+    if (p2) {
+        p2->on_end_fight(win_side == 1, count);
+    }
+}
 
 // 进入战斗前激活已存在的buff，如海克斯、羁绊、装备的加成等
 void Fight::pre_enable_buffs()
 {
     for (auto &it : fight_actors) {
         // 激活
-
+        it->init();
     }
 }
 

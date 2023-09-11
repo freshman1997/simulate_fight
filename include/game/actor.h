@@ -39,48 +39,4 @@ enum class ValueType
     bool_val,
 };
 
-union Val
-{
-    bool bval;
-    int ival;
-    float fval;
-    double dval;
-};
-
-struct Value
-{
-    ValueType type = ValueType::int_val;
-    Val base_val;
-    Val change_val;
-
-    template<class T>
-    T get_value()
-    {
-        switch (type)
-        {
-        case ValueType::int_val:
-            return T(base_val.ival + change_val.ival);
-        case ValueType::float_val:
-            return T(base_val.fval + change_val.fval);
-        case ValueType::double_val:
-            return T(base_val.dval + change_val.dval);
-        case ValueType::bool_val:
-            return T(change_val.bval);
-        
-        default:
-            break;
-        }
-
-        return T(base_val.ival + change_val.ival);
-    }
-};
-
-class ValueHandler
-{
-public:
-    virtual ~ValueHandler() {}
-    virtual bool remove() = 0;
-    virtual void on_value_changed(Value &) = 0;
-};
-
 #endif

@@ -1,9 +1,14 @@
 ﻿#ifndef __GAME_H__
 #define __GAME_H__
+#include <crtdefs.h>
+#include <stdint.h>
 #include <vector>
 #include <memory>
 
 #include "actor.h"
+#include "cfg/game_cfg.h"
+
+#define FRAME(frame_rate) (1.0f / frame_rate * 1000)
 
 enum class GameState
 {
@@ -12,7 +17,9 @@ enum class GameState
     select_weapon_with_hero,                // 选秀
     idle_normal,                            // 普通pve、pvp结束后中场
     idle_spec,                              // 选择海克斯的中场
-    fight,                                  // 战斗期，pve & pvp             
+    fight_pve,                              // 战斗期，pve
+    fight_pvp,                              // 战斗期，pvp             
+    force_end_game,                         // 强制结束
 };
 
 class HeroBase;
@@ -21,6 +28,8 @@ class EquipBase;
 class InputCommandBuffQueue;
 class OutputFrameBuffQueue;
 class EventManager;
+struct game_phase;
+class FightUnit;
 
 struct EquipHolder
 {
@@ -45,6 +54,16 @@ public:
 
     // 放置装备
     void puton_equip(bool board, Vector2 epos, Vector2 hpos);
+
+    // 选择海克斯buff
+    void select_buff(int idx);
+
+    // 获取战斗相关的buff
+    std::vector<int> get_fight_buffs();
+
+    // 战斗结束调用
+    void on_end_fight(bool win, int rest);
+
 public:
     // 开始战斗前的初始化工作
     void pre_start();
@@ -57,13 +76,17 @@ public:
     int defeat_amount;                      // 当前被打败场数
     int speed;                              // 小小英雄移速
     int interest;                           // 当前利息，海克斯可以修改
+    int flush_time;                         // 抽卡次数
     Vector2 pos;                            // 当前所在位置
+    std::vector<int> buffs;                 // 海克斯buff
     std::vector<EquipHolder> equip_holder;  // 装备
     std::vector<HeroBase *> boardHeros;     // 棋盘上的棋子
     std::vector<HeroBase *> holderHeros;    // 备战区的棋子
+
+public:
+    std::vector<int> candidate_buffs;       // 本次候选的海克斯buff
 };
 
-#define FRAME(frame_rate) (1.0f / frame_rate * 1000)
 class Timer;
 
 // 单场比赛对象
@@ -89,20 +112,27 @@ private:
     void start_pve();
 
     void clear_cache();
+    bool is_ending();
+    bool change_state(GameState state);
+    bool is_the_turn(GameState turn);
 
+    int gid;
 public:
     int get_frame_time();
     bool is_all_fight_end();
 
+    int get_gid();
+    
 public:
     int id;                                     // 当前场次的id
+    const game_phase *phase;                    // 当前阶段对应的配置信息
     int round;                                  // 当前是第几场，如3-2
     int round_end_count;                        // 当前回合结束的场数
     bool pause;                                 // 暂停标志
-    bool resume;                                // 恢复标志
-    long long start_time;                       // 开始游戏时间点
-    long long end_time;                         // 结束游戏时间点
-    long long last_time;                        // 上次执行的时间
+    time_t pause_time;                          // 暂停时间点
+    time_t start_time;                          // 开始游戏时间点
+    time_t end_time;                            // 结束游戏时间点
+    time_t last_time;                           // 上次执行的时间
     int state_pass_time;                        // 当前状态已经过去的时间
     int frame_rate;                             // 帧率
     int quick_frame_rate;                       // 2倍速
@@ -111,7 +141,7 @@ public:
     int next_time;                              // 下次执行间隔时间
     GameState state;                            // 游戏当前阶段
     GamePlayer players[8];                      // 当前场次的玩家
-    long long state_start_time;                 // 开始战斗时间点
+    time_t state_start_time;                    // 开始战斗时间点
     bool on_fight;                              // 是否处于战斗状态
     std::vector<Fight *> round_objects;         // 战斗回合对象, 最多8个，最少1个
     InputCommandBuffQueue *input;               // 输入队列
