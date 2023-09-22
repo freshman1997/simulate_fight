@@ -41,6 +41,7 @@
         ],
         "refresh_amount":8,
         "refresh_cost":2,
+        "surrender_phase":19,
         "win_gold":[
             1,
             1,

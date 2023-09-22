@@ -2,6 +2,8 @@
 #define __HERO_CFG_H__
 #include "cfg.h"
 #include <functional>
+#include <unordered_map>
+#include <vector>
 
 struct Hero
 {
@@ -24,9 +26,21 @@ struct Hero
     int cover_size[2];                                          // 占地面积
     std::unordered_map<int, std::pair<int, int>> merge;         // 合成高一费卡所需，2 -> 1, 3
     std::string desc;                                           // 描述
-    std::vector<int> careers;                                   // 羁绊/职业列表
+    std::vector<int> fetters;                                   // 羁绊/职业列表
     std::string name;                                           // 名字
     std::string impl_name;                                      // 实现对象名称
+    std::string ai_impl_name;
+};
+
+struct Fetter
+{
+    int id;
+    std::string name;
+    std::unordered_map<int, std::unordered_map<int, std::vector<float>>> buff_amount;
+    std::string impl_name;
+    json extra_params;
+
+    int is_active(int amount) const;
 };
 
 class HeroCfg : public CfgBase
@@ -37,11 +51,14 @@ public:
     bool parse_hero_cfg(json &);
 
     const Hero * get_hero(int id);
+
+    const Fetter * get_fetter(int id);
     
     void for_each_heros(std::function<bool(const Hero &)>);
 
 private:
     std::unordered_map<int, Hero> heros;
+    std::unordered_map<int, Fetter> fetters;
 };
 
 #endif

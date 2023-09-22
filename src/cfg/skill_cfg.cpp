@@ -26,11 +26,6 @@ bool SkillCfg::parse_skill(json &doc)
             sk.perform_type = it["perform_type"];
         }
 
-        sk.type = -1;
-        if (it["type"].is_number_integer()) {
-            sk.type = it["type"];
-        }
-
         sk.distance = 0;
         if (it["distance"].is_number_integer()) {
             sk.distance = it["distance"];
@@ -44,20 +39,7 @@ bool SkillCfg::parse_skill(json &doc)
             // TODO
             json &arr = it["buffs"];
             for (int i = 0; i < arr.size(); i++) {
-                json &buf = arr[i];
-                if (buf.is_array()) {
-                    SkillBuff sb;
-                    if (buf.size() > 1) {
-                        sb.buff_id = buf[0];
-                        for (int j = 1; j < buf.size(); ++j) {
-                            if (buf[i].is_number_integer()) {
-                                sb.params.push_back(buf[i]);
-                            }
-                        }
-
-                        sk.buffs.push_back(sb);
-                    }
-                }
+                
             }
         }
 

@@ -99,11 +99,13 @@ public:
         lua_pushcfunction(this->instance, &LuaAdapter::lua_error_handler);
         int err_fun_index = lua_gettop(this->instance);
 
-        if (try_get_table(this->instance, tb_name, func)) {
+        if (!try_get_table(this->instance, tb_name, func)) {
             return Result();
         }
 
-        if (!lua_isfunction(this->instance, -1)) {
+        int t1 = lua_type(this->instance, -1);
+        int t2 = lua_type(this->instance, -2);
+        if (!(lua_istable(this->instance, -2)) || !(lua_isfunction(this->instance, -1))) {
             return Result();
         }
 
@@ -113,7 +115,7 @@ public:
         int ret = lua_pcall(this->instance, arg_cnt, 1, err_fun_index);
 
         if (ret == 0) {
-            return get_result<Result>(this->instance, result);
+            return get_result<Result>(result);
         } else {
             result = false;
             return Result();
@@ -123,11 +125,10 @@ public:
     bool try_get_table(lua_State* L, const char* tableName, const char* valueName);
 
     // TODO
-    void reload(const char *name);
+    bool reload(const char *name);
 
 private:
     const char *cwd;
-    const char *reload_file;
     lua_State *instance;
 };
 

@@ -13,14 +13,22 @@
 
 class AiBase;
 class SkillBase;
-class EquipBase;
+class EquipmentBase;
 class Fight;
 class GamePlayer;
 
 #define add_xx(xx, _type) void add_##xx(_type num) \
 { \
+    this->xx += num; \
+} \
+_type max_##xx = 0;
+
+
+#define add_xx_1(xx, _type) void add_##xx(_type num) \
+{ \
     this->xx = num; \
-}
+} \
+_type max##xx = 0;
 
 enum class hurt_t
 {
@@ -48,7 +56,6 @@ protected:
     attack_state atk_state = attack_state::prepare;
 
 public:
-    virtual void init() = 0;
     virtual void after_init_check() = 0;
 
 public:
@@ -63,7 +70,7 @@ public:
     virtual bool can_perform_skill();
     virtual bool can_attack();
         
-    virtual void perform_hurt(hurt_t, hurt_sub_t, FightUnit *from, FightUnit *to, float damage) = 0;
+    virtual void perform_hurt(hurt_t, hurt_sub_t, FightUnit *from, FightUnit *to, float damage, int actor_id) = 0;
     
 public:
     bool is_die() { return hp <= 0; }
@@ -82,6 +89,10 @@ public:
     void clear_stuck();
 
 public:
+    void on_attack(float &damage);
+    void on_performed_skill();
+
+public:
     add_xx(hp, int)
     add_xx(mp, int)
     add_xx(atk_val, int)
@@ -93,15 +104,17 @@ public:
     add_xx(critical_extra, int)
     add_xx(atk_distance, int)
     add_xx(move_speed, int)
-    add_xx(stuck, bool)
     add_xx(shield, int)
+    add_xx_1(stuck, bool)
 
 public:
     void trigger_event(EventType type, const EventParams &);
-    void register_event(EventType, std::function<void (const EventParams &)>);
+    void register_event(EventType, int id, std::function<void (const EventParams &)>);
+    void remove_event(EventType, int id);
 
 public:
     int side = 0;               // 用于战斗期间
+    bool skill_critic = false;  // 技能是否可以暴击
 
 public:
     int hp = 0;                 // 血量
@@ -121,13 +134,7 @@ public:
     int cover_size[2] = {0};
 
 public:
-    int max_hp = 0;
-    int max_mp = 0;
-    int max_atk_def = 0;
-    int max_atk_dis = 0;
-    int max_ap_def = 0;
-    int max_atk = 0;
-    int max_ap = 0;
+    bool is_sommon = false;
 
 public:
     // position
@@ -143,7 +150,7 @@ public:
     const Hero *hero_cfg = nullptr;
 
 public:
-    std::vector<Vector2> *path = nullptr;                     // 暂存的路径
+    std::vector<Vector2> path;                     // 暂存的路径
     FightUnit *enemy = nullptr;                               // 暂存的目标  
     GamePlayer *owner = nullptr;                              // 暂存的玩家对象  
 
@@ -153,7 +160,7 @@ public:
     SkillBase *skill = nullptr;
  
     // 装备列表，包括散件和成装
-    std::unordered_map<int, EquipBase *> equipments;
+    std::unordered_map<int, EquipmentBase *> equipments;
     std::unordered_map<int, BuffBase *> buffs;
     std::unordered_map<buff_trigger_condition, std::unordered_map<int, BuffBase *>> trigger_buffs;
 };
@@ -167,11 +174,11 @@ public:
     virtual Object * clone();
     virtual Object * clone_and_clean();
     
-    virtual void init();
+    virtual bool init();
     virtual void update(float deltaTime);
 
     // 造成伤害的统一接口
-    virtual void perform_hurt(hurt_t, hurt_sub_t, FightUnit *from, FightUnit *to, float damage);
+    virtual void perform_hurt(hurt_t, hurt_sub_t, FightUnit *from, FightUnit *to, float damage, int actor_id);
 
     virtual void after_init_check(){};
 
@@ -185,6 +192,7 @@ public:
 private:
     void set_properties(HeroBase *);
     void do_attack();
+    void perform_hurt_mp(int damage);
 
 protected:
     float calc_atk_speed();

@@ -27,8 +27,10 @@ public:
         return actor.id != this->id;
     }
 
-public:
-    int id = 0;
+    // 一些初始化
+    virtual bool init() { return true; }
+    // 释放的时候调用
+    virtual void deinit() {}
 };
 
 enum class ValueType

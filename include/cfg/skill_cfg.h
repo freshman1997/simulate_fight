@@ -1,25 +1,33 @@
 ﻿#ifndef __SKILL_CFG_H__
 #define __SKILL_CFG_H__
+#include <unordered_map>
 #include <vector>
 #include "cfg.h"
+#include "nlohmann/json_fwd.hpp"
 
 struct SkillBuff
 {
     int buff_id;
-    std::vector<int> params;
+    std::vector<float> params;
 };
 
 struct Skill
 {
     int skill_id;
-    int type;
     int perform_type;
     int distance;
     int skill_time;
     int skill_sing_time;
-    std::vector<SkillBuff> buffs;
+    int target_choose_rule;
+    int target_amount;
+    int fly_speed;
+    int fly_width;
+    int passive_cond;
+    std::unordered_map<int, std::vector<SkillBuff>> buffs;
+    std::unordered_map<int, std::vector<SkillBuff>> passive_buffs;
     std::string name;
     std::string impl_name;
+    json extra_params;
 };
 
 class SkillCfg : public CfgBase

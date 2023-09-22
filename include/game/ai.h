@@ -12,6 +12,8 @@ class BuffBase;
 class AiBase : public Actor
 {
 public:
+    AiBase() {}
+    AiBase(FightUnit *_target) : target(_target){}
     virtual void update(float deltaTime);
     virtual Object * clone() { return new AiBase; };
     virtual Object * clone_and_clean() { return clone(); };
@@ -36,9 +38,14 @@ public:
     // 释放技能
     void perform_skill(FightUnit *);
 
+public:
+    void set_data(FightUnit *_target)
+    {
+        target = _target;
+    }
+
 private:
     FightUnit *target = nullptr;
-    GameMap *map = nullptr;
     float deltaTime = 0;
 };
 

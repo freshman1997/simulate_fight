@@ -1,0 +1,11 @@
+[
+    {
+        "cond":2,
+        "desc":"获得血量",
+        "func_type":1,
+        "id":1,
+        "level":1,
+        "lifecycle":2,
+        "type":2
+    }
+]

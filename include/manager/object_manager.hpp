@@ -14,22 +14,21 @@ public:
     static ObjectManager & get_instance();
 
 public:
-    template<class T>
     Object * clone_one_object(const std::string &tag)
     {
-        return clone_object<T, false>(tag);
+        return clone_object(tag, false);
     }
 
-    template<class T>
     Object * clone_one_clean_object(const std::string &tag)
     {
-        return clone_object<T, true>(tag);
+        return clone_object(tag, true);
     }
 
     template<class T>
-    bool register_type(const char *tag)
+    inline bool register_type(const char *tag)
     {
         static_assert(std::is_base_of<Object, T>::value, "T must base from Object");
+
         auto it = this->idxs.find(tag);
         if (it != this->idxs.end()) {
             assert(0);
@@ -55,46 +54,14 @@ public:
     size_t get_tag_idle_size(std::string &tag) const;
     size_t get_tag_using_size(std::string &tag) const;
 
+    void print_info();
+
 private:
     ObjectManager();
 
     // 尝试 clone 一个对象, 必须要有原型才能 clone
-    template<class T, bool clean>
-    Object * clone_object(const std::string &tag)
-    {
-        static_assert(std::is_base_of<Object, T>::value, "T must base from Object");
+    Object * clone_object(const std::string &tag, bool clean);
 
-        if (this->idle_objects[tag].empty()) {
-            if (this->idxs[tag] >= MAX_OBJECT_PER_TAG) {
-                // TODO 满了
-                return nullptr; 
-            }
-
-            if (this->using_objects[tag].empty()) {
-                // TODO error log
-                return nullptr;
-            }
-
-            auto it = this->using_objects.find(tag);
-            short id = this->idxs[tag];
-            Object *obj = clean ? it->second.begin()->second->clone_and_clean() : it->second.begin()->second->clone();
-            if (!obj) {
-                return nullptr;
-            }
-
-            ++this->idxs[tag];
-            it->second[id] = obj;
-            
-            return obj;
-        } else {
-            auto it = this->idle_objects.find(tag);
-            Object *obj = it->second.begin()->second;
-            it->second.erase(it->second.begin());
-            this->using_objects[tag][obj->idx] = obj;
-
-            return obj;
-        }
-    }
 private:
     std::unordered_map<std::string, std::unordered_map<int, Object *>> using_objects;
     std::unordered_map<std::string, std::unordered_map<int, Object *>> idle_objects;

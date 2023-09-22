@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package protcol;
+
+message User {
+    string name = 1;
+    int32 age = 2; 
+}
+
+message UserGroup {
+    repeated User user_list = 1;
+}

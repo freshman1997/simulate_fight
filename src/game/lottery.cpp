@@ -2,6 +2,7 @@
 #include <iterator>
 #include <stdlib.h>
 #include <utility>
+#include <vector>
 #include "cfg/equip_cfg.h"
 #include "cfg/game_cfg.h"
 #include "cfg/hero_cfg.h"
@@ -27,13 +28,23 @@ void LotteryHelper::init_pool()
     });
 }
 
-// 单次花钱刷新
-std::vector<int> LotteryHelper::lottery_heros(int lv, int amount)
+// 随机阵营
+std::vector<int> LotteryHelper::lottery_scene(int amount)
 {
     std::vector<int> res;
+
+    
+
+    return res;
+}
+
+
+// 单次花钱刷新
+void LotteryHelper::lottery_heros(int lv, int amount, std::vector<int> &res)
+{
     const lottery_ratio *ratio = CfgManager::get_instance().lottery_cfg.get_lottery_ratio(lv);
     if (!ratio) {
-        return res;
+        return;
     }
 
     float total_ratio = 0;
@@ -71,14 +82,12 @@ std::vector<int> LotteryHelper::lottery_heros(int lv, int amount)
         }
 
         if (it->second <= 0) {
-            return res;
+            return;
         }
 
         res.push_back(it->first);
         --it->second;
     }  
-
-    return res;
 }
 
 std::vector<int> LotteryHelper::lottery_equips(int amount)
@@ -97,7 +106,8 @@ std::vector<std::pair<int, std::vector<int>>> LotteryHelper::lottery_xuanxiu(int
     
     int real_equips = equips * (extra_equips > 0 ? extra_equips : 1);
 
-    const auto &res_heros = lottery_heros(phase_cfg->amount, real_equips);
+    std::vector<int> res_heros;
+    lottery_heros(phase_cfg->amount, real_equips, res_heros);
     const auto &res_equips = lottery_equips(real_equips);
     
     if (res_heros.empty() || res_equips.empty()) {
@@ -135,7 +145,7 @@ bool LotteryHelper::rand_can_do(int total, int rate)
 // 随机一个范围内的数值
 int LotteryHelper::rand_num(int max_amount)
 {
-    return rand() % max_amount + 1;
+    return rand() % max_amount;
 }
 
 // 是否命中
@@ -154,4 +164,10 @@ void LotteryHelper::release(int hero_id, int star)
 
     int amount = star == 1 ? 1 : (star == 2 ? 2 : 3);
     this->pool[hero->gold][hero_id] += amount;
+}
+
+////////////////// equip /////////////////////
+std::vector<EquipmentBase *> LotteryHelper::rand_equips(int amount, int type)
+{
+    return {};
 }

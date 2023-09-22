@@ -19,6 +19,16 @@ enum class EventType : unsigned char
     GAME_END,               // 游戏结束
 };
 
+class FightUnit;
+
+struct UnitDieParam
+{
+    FightUnit *die_unit = nullptr;
+    FightUnit *killer = nullptr;
+    bool atk = false;
+    int actor_id = -1;
+};
+
 class EventParams
 {
 public:
@@ -34,15 +44,30 @@ public:
     void *ptr;
 };
 
+struct EventStruct
+{
+    int id;
+    std::function<void (const EventParams &)> func = nullptr;
+    void operator()(const EventParams &param) 
+    {
+        if (!func) {
+            return;
+        }
+
+        func(param);
+    }
+};
+
 class EventManager
 {
 public:
     EventManager();
-    void register_event(EventType, std::function<void (const EventParams &)>);
+    void register_event(EventType, int id, std::function<void (const EventParams &)>);
     void trigger_event(EventType, const EventParams &); 
+    void remove_event(EventType, int id);
 
 private:
-    std::unordered_map<EventType, std::list<std::function<void (const EventParams &)>>> functors;
+    std::unordered_map<EventType, std::list<EventStruct>> functors;
 };
 
 #endif

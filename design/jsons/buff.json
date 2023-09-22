@@ -1,524 +1,294 @@
 [
     {
-        "func_type":3,
+        "desc":"获得生命值",
+        "func_type":1,
         "id":1,
-        "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":1,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            100
-        ],
-        "trigger_time":1,
-        "type":1
+        "impl_name":"base_buff"
     },
     {
-        "func_type":3,
+        "desc":"获得法强",
+        "func_type":6,
         "id":2,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":2,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            101
-        ],
-        "trigger_time":1,
-        "type":2
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
-        "func_type":3,
+        "desc":"获得攻击力",
+        "func_type":5,
         "id":3,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":3,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            102
-        ],
-        "trigger_time":1,
-        "type":3
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
+        "desc":"获得护甲",
         "func_type":3,
         "id":4,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":4,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            103
-        ],
-        "trigger_time":1,
-        "type":4
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
-        "func_type":3,
+        "desc":"获得魔抗",
+        "func_type":4,
         "id":5,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":5,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            104
-        ],
-        "trigger_time":1,
-        "type":5
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
-        "func_type":3,
+        "desc":"获得百分比生命值",
+        "func_type":1,
         "id":6,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":6,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            105
-        ],
-        "trigger_time":1,
-        "type":6
+        "param_type":2,
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
-        "func_type":3,
+        "desc":"获得护盾",
+        "func_type":8,
         "id":7,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":7,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            106
-        ],
-        "trigger_time":1,
-        "type":7
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
-        "func_type":3,
+        "desc":"获得治疗效果",
+        "func_type":15,
         "id":8,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":8,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            107
-        ],
-        "trigger_time":1,
-        "type":8
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
-        "func_type":3,
+        "desc":"获得重伤效果",
+        "func_type":16,
         "id":9,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":9,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            108
-        ],
-        "trigger_time":1,
-        "type":9
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
-        "func_type":3,
+        "desc":"沉默",
+        "func_type":9,
         "id":10,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":10,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            109
-        ],
-        "trigger_time":1,
-        "type":10
+        "strong_control":1,
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
-        "func_type":3,
+        "desc":"眩晕",
+        "func_type":10,
         "id":11,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":11,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            110
-        ],
-        "trigger_time":1,
-        "type":11
+        "strong_control":1,
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
-        "func_type":3,
+        "desc":"击飞",
+        "func_type":12,
         "id":12,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":12,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            111
-        ],
-        "trigger_time":1,
-        "type":12
+        "strong_control":1,
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
-        "func_type":3,
+        "desc":"缴械",
+        "func_type":13,
         "id":13,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":13,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            112
-        ],
-        "trigger_time":1,
-        "type":13
+        "strong_control":1,
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
-        "func_type":3,
+        "desc":"嘲讽",
+        "func_type":14,
         "id":14,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":14,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            113
-        ],
-        "trigger_time":1,
-        "type":14
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
-        "func_type":3,
+        "desc":"获得蓝量",
+        "func_type":2,
         "id":15,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":15,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            114
-        ],
-        "trigger_time":1,
-        "type":15
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
-        "func_type":3,
+        "desc":"造成真实伤害",
+        "func_type":1,
+        "hurt_type":3,
         "id":16,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":16,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            115
-        ],
-        "trigger_time":1,
-        "type":16
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
-        "func_type":3,
+        "desc":"造成最大生命值的物理伤害",
+        "func_type":1,
         "id":17,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":17,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            116
-        ],
-        "trigger_time":1,
-        "type":17
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
-        "func_type":3,
+        "desc":"造成额外物理伤害",
+        "func_type":1,
         "id":18,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":18,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            117
-        ],
-        "trigger_time":1,
-        "type":18
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
-        "func_type":3,
+        "desc":"禁锢",
+        "func_type":11,
         "id":19,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":19,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            118
-        ],
-        "trigger_time":1,
-        "type":19
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
-        "func_type":3,
+        "desc":"获得额外攻速",
+        "func_type":7,
         "id":20,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":20,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            119
-        ],
-        "trigger_time":1,
-        "type":20
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
-        "func_type":3,
+        "desc":"造成额外魔法伤害",
+        "func_type":1,
         "id":21,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":21,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            120
-        ],
-        "trigger_time":1,
-        "type":21
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
-        "func_type":3,
+        "desc":"造成最大生命值的魔法伤害",
+        "func_type":1,
         "id":22,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":22,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            121
-        ],
-        "trigger_time":1,
-        "type":22
+        "trigger_rate":50,
+        "trigger_time":1
     },
     {
+        "desc":"减少百分比护甲",
         "func_type":3,
         "id":23,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":23,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            122
-        ],
+        "trigger_rate":50,
         "trigger_time":1,
-        "type":23
+        "value_from":3
     },
     {
-        "func_type":3,
+        "desc":"减少百分比魔抗",
+        "func_type":4,
         "id":24,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":24,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            123
-        ],
+        "trigger_rate":50,
         "trigger_time":1,
-        "type":24
+        "value_from":4
     },
     {
-        "func_type":3,
+        "desc":"造成最大生命值的真实伤害",
+        "func_type":1,
         "id":25,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":25,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            124
-        ],
+        "trigger_rate":50,
         "trigger_time":1,
-        "type":25
+        "value_from":5
     },
     {
-        "func_type":3,
+        "desc":"获得百分比法强",
+        "func_type":6,
         "id":26,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":26,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            125
-        ],
+        "trigger_rate":50,
         "trigger_time":1,
-        "type":26
+        "value_from":2
     },
     {
-        "func_type":3,
+        "desc":"获得百分比攻击力",
+        "func_type":5,
         "id":27,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":27,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            126
-        ],
+        "trigger_rate":50,
         "trigger_time":1,
-        "type":27
+        "value_from":1
     },
     {
-        "func_type":3,
+        "desc":"获得百分比最大生命值治疗效果",
+        "func_type":15,
         "id":28,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":28,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            127
-        ],
+        "lasting":1,
+        "trigger_rate":50,
         "trigger_time":1,
-        "type":28
+        "value_from":5
     },
     {
-        "func_type":3,
+        "desc":"增加额外魔法伤害",
+        "func_type":1,
         "id":29,
         "impl_name":"base_buff",
-        "keep":0,
-        "lasting":50,
-        "sub_type":2,
-        "target_amount":29,
-        "target_choose_rule":1,
-        "target_sort":1,
-        "trigger_condition":0,
-        "trigger_rate":[
-            50,
-            128
-        ],
-        "trigger_time":1,
-        "type":29
+        "trigger_rate":50,
+        "trigger_time":1
+    },
+    {
+        "desc":"减少魔抗（有时间限制）",
+        "func_type":4,
+        "id":30,
+        "trigger_time":1
+    },
+    {
+        "desc":"减少魔抗（无时间限制，一直到结束）",
+        "func_type":4,
+        "id":31,
+        "trigger_time":1
+    },
+    {
+        "desc":"造成魔法伤害",
+        "func_type":1,
+        "id":32,
+        "trigger_time":1
+    },
+    {
+        "desc":"造成物理伤害",
+        "func_type":1,
+        "id":33,
+        "trigger_time":1
+    },
+    {
+        "desc":"获得护盾（有持续时间）",
+        "func_type":8,
+        "id":34,
+        "trigger_time":1
+    },
+    {
+        "desc":"获得治疗（直接固定费数值治疗）",
+        "func_type":1,
+        "id":35,
+        "trigger_time":1
+    },
+    {
+        "desc":"获得重伤效果（有时间限制）",
+        "id":36
+    },
+    {
+        "desc":"减少护盾",
+        "func_type":8,
+        "id":37
+    },
+    {
+        "desc":"减少护甲（无时间限制，一直到结束）",
+        "id":38
     }
 ]

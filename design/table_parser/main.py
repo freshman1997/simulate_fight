@@ -8,9 +8,9 @@ def parse_one_sheet(v):
         tb = v[i]
         res = parser.parse_one("design", tb["parse_file"], tb["parse_sheet"], "design/jsons/" + tb["output"])
         if not res:
-            print("parse table %s fail!" % tb["parse_file"]) 
+            print("parse table %s:%s fail!" % tb["parse_file"], tb["parse_sheet"]) 
         else:
-            print("[success] %s ===> %s" % (tb["parse_file"], "design/jsons/" + tb["output"]))
+            print("[success] %s:%s ===> %s" % (tb["parse_file"], tb["parse_sheet"], "design/jsons/" + tb["output"]))
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:

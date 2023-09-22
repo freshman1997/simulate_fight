@@ -4,6 +4,9 @@
 #include "game/skill.h"
 #include "game/fight.h"
 #include "game/game.h"
+#include "manager/object_manager.hpp"
+
+REGISTER_TYPE("ai_base", AiBase)
 
 // 战斗怎么做？
 /*
@@ -42,21 +45,21 @@ void AiBase::attack(FightUnit *unit)
 // 移动
 void AiBase::move(FightUnit *unit)
 {
-    if (!this->update_path(unit) || unit->path->empty() 
-        || unit->move_step < 0 || unit->move_step >= unit->path->size()) {
+    if (!this->update_path(unit) || unit->path.empty() 
+        || unit->move_step < 0 || unit->move_step >= unit->path.size()) {
         return;
     }
 
     float incDest = unit->move_speed * 1.0 / this->target->round_obj->game->cur_frame_time;
     unit->move_distance += incDest;
 
-    const Vector2 &next_step = unit->path->at(unit->move_step);
-    if (this->map->vector2_distance(unit->pos, next_step) > unit->move_distance) {
+    const Vector2 &next_step = unit->path[unit->move_step];
+    if (target->round_obj->map->vector2_distance(unit->pos, next_step) > unit->move_distance) {
         return;
     }
 
     
-    if (!this->map->move(unit, next_step)) {
+    if (!target->round_obj->map->move(unit, next_step)) {
         return;
     }
 
@@ -102,14 +105,14 @@ void AiBase::set_force_target(FightUnit *unit, FightUnit *target)
 // 寻路
 bool AiBase::find_path(FightUnit *unit)
 {
-    if (!this->map || !unit || !unit->enemy || unit->path) {
+    if (!unit || !unit->enemy || unit->path.empty()) {
         return false;
     }
 
-    std::vector<Vector2> &path = *(unit->path);
+    std::vector<Vector2> &path = unit->path;
     path.clear();
 
-    this->map->find_path(unit->pos, unit->enemy->pos, path);
+    target->round_obj->map->find_path(unit->pos, unit->enemy->pos, path);
     if (path.empty()) {
         return false;
     }
@@ -132,12 +135,12 @@ bool AiBase::update_path(FightUnit *unit)
         }
     }
 
-    if (!unit->path || change_target) {
+    if (unit->path.empty() || change_target) {
         bool ret = find_path(unit);
         if (!ret) {
-            if (unit->path) {
+            if (!unit->path.empty()) {
                 // TODO 清空路径
-                unit->path->clear();
+                unit->path.clear();
             } 
             return false;
         } else {

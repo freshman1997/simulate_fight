@@ -5,6 +5,7 @@
 #include "cfg/equip_cfg.h"
 #include "cfg/game_cfg.h"
 #include "cfg/lottery_cfg.h"
+#include "cfg/player_cfg.h"
 #include "cfg/skill_cfg.h"
 #include "cfg/hero_cfg.h"
 
@@ -17,6 +18,7 @@ public:
     SkillCfg skill_cfg;
     EquipCfg equip_cfg;
     LotteryCfg lottery_cfg;
+    PlayerCfg player_cfg;
 
 public:
     static CfgManager & get_instance();

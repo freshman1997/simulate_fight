@@ -1,5 +1,6 @@
 ﻿#include "game/hero.h"
 #include "game/ai.h"
+#include "game/buff.h"
 #include "game/equip.h"
 #include "game/event/event.h"
 #include "manager/object_manager.hpp"
@@ -14,8 +15,8 @@ REGISTER_TYPE("hero_base", HeroBase)
 void FightUnit::do_add_buff(BuffBase *buff)
 {
     buff->on_add();
-    if (buff->buff_cfg->trigger_cond != buff_trigger_condition::none) {
-        this->trigger_buffs[buff->buff_cfg->trigger_cond][buff->buff_cfg->id] = buff;
+    if ((buff_trigger_condition)buff->buff_cfg->trigger_cond != buff_trigger_condition::none) {
+        this->trigger_buffs[(buff_trigger_condition)buff->buff_cfg->trigger_cond][buff->buff_cfg->id] = buff;
     } else {
         auto it = this->buffs.find(buff->buff_cfg->id);
         if (it != this->buffs.end()) {
@@ -39,7 +40,7 @@ void FightUnit::trigger_buff(BuffBase *buff)
 {
     if (!buff) return;
 
-    switch (buff->buff_cfg->functype) {
+    switch ((buff_func_type)buff->buff_cfg->functype) {
         case buff_func_type::hp: {
             if (!buff->params.empty()) {
                 int amount = (int)buff->params[0];
@@ -53,7 +54,7 @@ void FightUnit::trigger_buff(BuffBase *buff)
 
                         this->add_hp(tmp);
                     } else {
-                        this->perform_hurt(hurt_t::buff, hurt_sub_t(buff->buff_cfg->hurt_type), buff->from, buff->to, amount);
+                        this->perform_hurt(hurt_t::buff, hurt_sub_t(buff->buff_cfg->hurt_type), buff->from, buff->to, amount, buff->skill_id > 0 ? buff->skill_id : buff->id);
                     }
                 }
             }
@@ -86,7 +87,7 @@ void FightUnit::trigger_buff(BuffBase *buff)
         case buff_func_type::atk_dis: {
             if (!buff->params.empty()) {
                 this->add_atk_distance((int)buff->params[0]);
-                this->max_atk_dis += (int)buff->params[0];
+                this->max_atk_distance += (int)buff->params[0];
             }
             break;
         }
@@ -155,8 +156,8 @@ void FightUnit::on_buff_end(BuffBase *buff)
         return;
     }
 
-    if (buff->buff_cfg->trigger_cond != buff_trigger_condition::none) {
-        auto it = this->trigger_buffs.find(buff->buff_cfg->trigger_cond);
+    if ((buff_trigger_condition)buff->buff_cfg->trigger_cond != buff_trigger_condition::none) {
+        auto it = this->trigger_buffs.find((buff_trigger_condition)buff->buff_cfg->trigger_cond);
         if (it == this->trigger_buffs.end()) {
             return;
         }
@@ -172,7 +173,7 @@ void FightUnit::on_buff_end(BuffBase *buff)
         }
     }
     
-    switch (buff->buff_cfg->functype) {
+    switch ((buff_func_type)buff->buff_cfg->functype) {
          case buff_func_type::silence: {
             if (this->skill) {
                 this->skill->continue_skill();
@@ -208,8 +209,8 @@ void FightUnit::on_buff_end(BuffBase *buff)
     }
 
     if (buff->buff_cfg->trigger_time == 0) {
-        if (buff->buff_cfg->trigger_cond != buff_trigger_condition::none) {
-            this->trigger_buffs[buff->buff_cfg->trigger_cond].erase(buff->buff_cfg->id);
+        if ((buff_trigger_condition)buff->buff_cfg->trigger_cond != buff_trigger_condition::none) {
+            this->trigger_buffs[(buff_trigger_condition)buff->buff_cfg->trigger_cond].erase(buff->buff_cfg->id);
         } else {
             this->buffs.erase(buff->buff_cfg->id);
         }
@@ -270,12 +271,31 @@ void FightUnit::trigger_event(EventType type, const EventParams &params)
     this->round_obj->game->ev_manager->trigger_event(type, params);
 }
     
-void FightUnit::register_event(EventType type, std::function<void (const EventParams &)> func)
+void FightUnit::register_event(EventType type, int id, std::function<void (const EventParams &)> func)
 {
-    this->round_obj->game->ev_manager->register_event(type, func);
+    this->round_obj->game->ev_manager->register_event(type, id, func);
 }
 
+void FightUnit::remove_event(EventType type, int id)
+{
+    this->round_obj->game->ev_manager->remove_event(type, id);
+}
 
+void FightUnit::on_attack(float &damage)
+{
+    for (auto &it : this->equipments) {
+        it.second->on_attack(damage);
+    }
+}
+
+void FightUnit::on_performed_skill()
+{
+    for (auto &it : this->equipments) {
+        it.second->on_performed_skill();
+    }
+}
+
+/////////////////////////////////////
 Object * HeroBase::clone()
 {
     HeroBase *hero = new HeroBase;
@@ -293,25 +313,32 @@ HeroBase::HeroBase()
 
 }
 
-void HeroBase::init()
+bool HeroBase::init()
 {
-    this->path = new std::vector<Vector2>;
+    this->ai = dynamic_cast<AiBase *>(this->round_obj->game->create_object(hero_cfg->ai_impl_name));
+    if (!this->ai) {
+        return false;
+    }
+
     atk_time = 0;
     cumulative_atk_time = 0;
 
+    // 设置属性部分
+
+
+    // 装备有些是需要计算总的属性的，所以需要最后计算
+    for (auto &it : this->equipments) {
+        it.second->on_begin();
+    }
+
     if (this->owner) {
-        const std::vector<int> &player_buffs = this->owner->get_fight_buffs();
+        const std::vector<BuffBase *> &player_buffs = this->owner->get_fight_buffs();
         for (auto &it : player_buffs) {
 
         }
     }
 
-    // 设置属性部分
-
-
-    for (auto &it : this->equipments) {
-        it.second->on_begin();
-    }    
+    return true;
 }
 
 void HeroBase::set_properties(HeroBase *)
@@ -346,7 +373,7 @@ float HeroBase::calc_damage(hurt_sub_t type, float damage)
 }
 
 // 造成伤害的统一接口
-void HeroBase::perform_hurt(hurt_t type, hurt_sub_t subtype, FightUnit *from, FightUnit *to, float damage)
+void HeroBase::perform_hurt(hurt_t type, hurt_sub_t subtype, FightUnit *from, FightUnit *to, float damage, int actor_id)
 {
     // TODO，计算护甲、魔抗、减伤、增伤、真实伤害、生命值低于 5% 斩杀 ？
     float real_damage = calc_damage(subtype, damage);
@@ -367,7 +394,9 @@ void HeroBase::perform_hurt(hurt_t type, hurt_sub_t subtype, FightUnit *from, Fi
         auto it = this->trigger_buffs.find(buff_trigger_condition::atk);
         float tmp = 0;
         for (auto &it1 : it->second) {
-            tmp += it1.second->params[0];
+            if (!it1.second->params.empty()) {
+                tmp += calc_damage(hurt_sub_t(it1.second->buff_cfg->hurt_type), it1.second->params[0]);
+            }
         }
     }
 
@@ -376,13 +405,13 @@ void HeroBase::perform_hurt(hurt_t type, hurt_sub_t subtype, FightUnit *from, Fi
     // 增伤、减伤、斩杀
     for (auto &it : to->trigger_buffs) {
         for (auto &it1 : it.second) {
-            if (it1.second->buff_cfg->functype == buff_func_type::hp 
-            && it1.second->buff_cfg->trigger_cond == buff_trigger_condition::hurt 
+            if ((buff_func_type)it1.second->buff_cfg->functype == buff_func_type::hp 
+            && (buff_trigger_condition)it1.second->buff_cfg->trigger_cond == buff_trigger_condition::hurt 
             && (char)it1.second->buff_cfg->spec_cond >= 0) {
-                if (it1.second->buff_cfg->spec_cond == buff_specical_trigger_cond::inc_hurt 
-                    || it1.second->buff_cfg->spec_cond == buff_specical_trigger_cond::inc_hurt) {
+                if ((buff_specical_trigger_cond)it1.second->buff_cfg->spec_cond == buff_specical_trigger_cond::inc_hurt 
+                    || (buff_specical_trigger_cond)it1.second->buff_cfg->spec_cond == buff_specical_trigger_cond::inc_hurt) {
                     real_damage *= it1.second->params[0];
-                } else if (it1.second->buff_cfg->spec_cond == buff_specical_trigger_cond::behead) {
+                } else if ((buff_specical_trigger_cond)it1.second->buff_cfg->spec_cond == buff_specical_trigger_cond::behead) {
                     if (to->hp * 1.0 / to->max_hp <= it1.second->params[0]) {
                         real_damage = to->hp;
                     }
@@ -396,10 +425,18 @@ void HeroBase::perform_hurt(hurt_t type, hurt_sub_t subtype, FightUnit *from, Fi
     
     if (real_damage > 0) {
         to->add_hp(std::ceil(real_damage));
+        if (this->hp > 0 && this->can_perform_skill() && !this->skill->is_performing()) {
+            perform_hurt_mp(real_damage);
+        }
     }
 
     if (to->is_die()) {
         // TODO
+        UnitDieParam param;
+        param.die_unit = to;
+        param.atk = type == hurt_t::attack;
+        param.killer = from;
+
         trigger_event(EventType::UNIT_DIE, {to});
     }
 }
@@ -420,7 +457,8 @@ float HeroBase::calc_atk_speed()
 void HeroBase::do_attack()
 {
     float damage = calc_damage(hurt_sub_t::physics, this->atk_val);
-    this->perform_hurt(hurt_t::attack, hurt_sub_t::physics, this, enemy, damage);
+    this->on_attack(damage);
+    this->perform_hurt(hurt_t::attack, hurt_sub_t::physics, this, enemy, damage, this->id);
     if (this->hp > 0) {
         this->add_mp(10);
     }
@@ -474,13 +512,7 @@ start:
 void HeroBase::on_being_attack(FightUnit *from, float damage)
 {
     // 增加蓝量、调用装备的接口
-    int pre_hp = this->hp;
-    this->perform_hurt(hurt_t::attack, hurt_sub_t::physics, from, this, damage);
-    if (this->hp > 0) {
-        // y = 0.08 * damage => 回蓝量，damage 为被攻击后失去生命值，包括普工、技能等方式
-        int add_amount = (int)0.08 * (pre_hp - this->hp);
-        this->add_mp(add_amount);
-    }
+    this->perform_hurt(hurt_t::attack, hurt_sub_t::physics, from, this, damage, from->id);
 
     // 抛出被攻击事件
     trigger_event(EventType::UNIT_HURT, {});
@@ -491,5 +523,12 @@ void HeroBase::buff_action()
     for (auto it = buffs.begin(); it != buffs.end(); ++it) {
         it->second->update(delta);
     }
+}
+
+void HeroBase::perform_hurt_mp(int damage)
+{
+    // y = 0.08 * damage => 回蓝量，damage 为被攻击后失去生命值，包括普工、技能等方式
+    int add_amount = (int)(0.08 * damage);
+    this->add_mp(add_amount);
 }
 

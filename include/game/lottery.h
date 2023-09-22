@@ -3,6 +3,8 @@
 #include <vector>
 #include <unordered_map>
 
+class EquipmentBase;
+
 class LotteryHelper
 {
 public:
@@ -11,8 +13,11 @@ public:
     void init_pool();
 
 public:
+    // 随机阵营
+    std::vector<int> lottery_scene(int amount);
+
     // 抽卡
-    std::vector<int> lottery_heros(int lv, int amount);
+    void lottery_heros(int lv, int amount, std::vector<int> &res);
 
     // 抽装备
     inline std::vector<int> lottery_equips(int amount);
@@ -40,6 +45,9 @@ public:
 
     // 是否命中
     bool rand_one(float ratio);
+public:
+    // 随机装备（成装）
+    std::vector<EquipmentBase *> rand_equips(int amount, int type);
 
 public:
     // 卖掉卡

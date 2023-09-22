@@ -1,25 +1,30 @@
 ﻿#ifndef __BUFF_CFG_H__
 #define __BUFF_CFG_H__
 #include "cfg.h"
-#include "game/buff.h"
 #include <unordered_map>
 
 struct Buff
 {
+    int id;                                                             // id
+    char functype;                                                      // 作用类型
+    char hurt_type;                                                     // 伤害类型
+    char param_type;                                                    // 参数类型
+    char property;                                                      // 属性类型，基础数值 or 百分比
+    char trigger_cond;                                                  // 触发条件
+    char spec_cond;                                                     // 特殊触发条件
+    int trigger_time;                                                   // 触发次数
+    float trigger_rate;                                                 // 触发概率
+    bool die_keep;                                                      // 释放者死亡后，接收者是否保留
+    int lasting;                                                        // 持续时间
+    std::string impl_name;                                              // 实现类名
+};
+
+struct SimpleBufff
+{
     int id;
-    buff_func_type functype;
-    buff_hurt_type hurt_type;
-    buff_param_type param_type;
-    buff_property_type property;
-    buff_trigger_condition trigger_cond;
-    buff_specical_trigger_cond spec_cond;
-    int trigger_time;
-    float trigger_rate;
-    bool die_keep;
-    int target_amount;
-    int lasting;
-    std::unordered_map<std::string, float> properties;
-    std::string impl_name;
+    int buff_type;
+    int buff_func_type;
+    
 };
 
 class BuffCfg : public CfgBase

@@ -1,5 +1,6 @@
 ﻿#ifndef __MAP_H__
 #define __MAP_H__
+#include <unordered_map>
 #include <vector>
 #include <cmath>
 #include <algorithm>
@@ -84,14 +85,24 @@ public:
 		}
     }
 
+	float distance(const FightUnit *unit);
+
+	float distance(const FightUnit *unit1, const FightUnit *unit2);
+
+	// 范围内所有
     std::vector<FightUnit *> find_around(int len, const OffsetCoord &pos);
+
+	// 范围内随机一个
     FightUnit * rand_around_one(int len, const OffsetCoord &pos);
 
-	float distance(FightUnit *unit);
+	// 与目标单位方向上所有
+	std::vector<FightUnit *> dir_units(const FightUnit *unit);
 
 	void find_path(Vector2 from, Vector2 to, std::vector<Vector2> &);
 
 	bool move(FightUnit *unit, Vector2 pos);
+
+	void set_hero(FightUnit *unit, Vector2 pos);
 
 	void remove(FightUnit *unit);
 
@@ -100,7 +111,14 @@ public:
 	bool has_unit(const HexCube& cube)
 	{
 		OffsetCoord offc = qoffset_from_cube(cube);
-		return game_map[offc.x][offc.y].unit != nullptr;
+		if (!is_valid_pos(offc)) return false;
+		return game_map[offc.x][offc.y].units.empty();
+	}
+
+	bool has_unit(const OffsetCoord& offc)
+	{
+		if (!is_valid_pos(offc)) return false;
+		return game_map[offc.x][offc.y].units.empty();
 	}
 
 	bool is_overbound(const HexCube& cube)
@@ -299,7 +317,8 @@ private:
     float hex_dir[6][3];
     struct MapHolder
     {
-        FightUnit *unit = nullptr;
+		// 包括英雄，召唤物，技能产生的实体等
+		std::unordered_map<int, FightUnit *> units;
         HexCube pos;
     };
     

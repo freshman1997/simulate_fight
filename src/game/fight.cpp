@@ -1,6 +1,10 @@
 ﻿#include "game/fight.h"
+#include "game/buff.h"
+#include "game/event/event.h"
 #include "game/map.h"
 #include "game/game.h"
+#include <memory>
+#include <string.h>
 
 Object * Fight::clone()
 {
@@ -14,22 +18,18 @@ Object * Fight::clone_and_clean()
     return f;
 }
 
-Fight::Fight(Game *_game) : started(false), error(false), win_side(-1), rest_heros(0), map(new GameMap), game(_game), is_mirror(false)
-{}
+Fight::Fight(Game *_game) : error(false), win_side(-1), rest_heros(0), map(std::make_shared<GameMap>()), game(_game), is_mirror(false)
+{
+    memset(die_counter, 0, sizeof(die_counter));
+}
 
 void Fight::clear_cache()
 {
-
+    
 }
 
 void Fight::update(float deltaTime)
 {
-    if (!started) {
-        pre_enable_buffs();
-        random_units();
-        started = true;
-    }
-
     for (auto &it : fight_actors) {
         it->update(deltaTime);
     }
@@ -56,26 +56,65 @@ void Fight::on_fight_end()
     int sommon_amount = 0, count = 0;
     for (auto &it : rest) {
         if (!it->is_die()) {
-            ++count;
+            if (it->is_sommon) {
+                ++sommon_amount;
+            } else {
+                ++count;
+            }
         }
     }
 
     if (p1 && !is_mirror) {
-        p1->on_end_fight(win_side == 0, count);
+        p1->on_fight_end(win_side == 0, count);
     }
 
     if (p2) {
-        p2->on_end_fight(win_side == 1, count);
+        p2->on_fight_end(win_side == 1, count);
     }
 }
 
 // 进入战斗前激活已存在的buff，如海克斯、羁绊、装备的加成等
-void Fight::pre_enable_buffs()
+bool Fight::init()
 {
+    random_units();
+    
     for (auto &it : fight_actors) {
         // 激活
-        it->init();
+        it->round_obj = this;
+        if (it->init()) {
+            return false;
+        }
     }
+
+    this->game->ev_manager->register_event(EventType::UNIT_DIE, this->id, [this](const EventParams &params) {
+        if (win_side >= 0) {
+            return;
+        }
+
+        FightUnit *unit = (FightUnit *)params.ptr;
+        if (!unit || !unit->owner || (*unit->round_obj != *this) || (unit->owner->player_id != p1->player_id || unit->owner->player_id != p2->player_id)) {
+            return;
+        }
+
+        if (unit->owner->player_id == p1->player_id) {
+            ++die_counter[0];
+            if (die_counter[0] >= player1.size()) {
+                on_fight_end();
+            }
+        } else {
+            ++die_counter[1];
+            if (die_counter[1] >= player1.size()) {
+                on_fight_end();
+            }
+        }
+    });
+
+    return true;
+}
+
+void Fight::deinit()
+{
+    
 }
 
 void Fight::random_units()
@@ -94,26 +133,3 @@ void Fight::random_units()
     }
 }
 
-bool Fight::is_end()
-{
-    if (win_side >= 0) return true;
-
-    int count1 = 0, count2 = 0;
-    for (auto &it : fight_actors) {
-        if (it->side && it->is_die()) {
-            ++count1;
-        } else {
-            count2 = it->is_die() ? count2 + 1 : count2;
-        }
-    }
-
-    if (count1 == player1.size()) {
-        this->win_side = 0;
-    }
-
-    if (count2 == player2.size()) {
-        this->win_side = 1;
-    }
-
-    return win_side >= 0;
-}

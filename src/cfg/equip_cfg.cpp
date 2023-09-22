@@ -12,19 +12,19 @@ bool EquipCfg::parse_equip_config(json &)
     return true;
 }
 
-const equip * EquipCfg::get_equip(int id)
+const Equip * EquipCfg::get_equip(int id)
 {
     auto it = this->equips.find(id);
     return it == this->equips.end() ? nullptr : &it->second;
 }
 
-const equip * EquipCfg::get_shard_equip(int id)
+const Equip * EquipCfg::get_shard_equip(int id)
 {
     auto it = this->shard_equips.find(id);
     return it == this->shard_equips.end() ? nullptr : &it->second;
 }
 
-static std::vector<int> lottery(const std::unordered_map<int, equip> &equips, int amount)
+static std::vector<int> lottery(const std::unordered_map<int, Equip> &equips, int amount)
 {
     if (equips.empty() || amount <= 0 || amount >= equips.size()) {
         return {};

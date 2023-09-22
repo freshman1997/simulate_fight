@@ -10,6 +10,7 @@ CfgManager::CfgManager()
     __REGISTER_CFG__(hero_cfg)
     __REGISTER_CFG__(equip_cfg)
     __REGISTER_CFG__(lottery_cfg)
+    __REGISTER_CFG__(player_cfg)
 }
 
 CfgManager & CfgManager::get_instance()

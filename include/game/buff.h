@@ -79,6 +79,14 @@ enum class buff_specical_trigger_cond : char
     behead,                 // 斩杀
 };
 
+enum class buff_from_type
+{
+    none = -1,
+    equip,                  // 装备
+    skill,                  // 技能
+    fetter,                 // 羁绊
+};
+
 class BuffBase : public Actor
 {
 public:
@@ -91,13 +99,19 @@ public:
     void reset();
     void free();
 
+    // 设置暴击buff参数
+    void set_buff_critical_param();
+
 public:
-    std::vector<float> params;
+    bool critical = false;
+    buff_from_type f_type = buff_from_type::none;
+    int skill_id = -1;
+    int trigger_time = 0;
+    float buff_time = 0;
     const Buff *buff_cfg = nullptr;
     FightUnit *from = nullptr;
     FightUnit *to = nullptr;
-    int trigger_time = 0;
-    float buff_time = 0;
+    std::vector<float> params;
 };
 
 #endif

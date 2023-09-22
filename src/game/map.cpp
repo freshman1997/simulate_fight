@@ -1,11 +1,33 @@
 ﻿#include "game/map.h"
 #include "game/hero.h"
 
-float GameMap::distance(FightUnit *unit)
+float GameMap::distance(const FightUnit *unit)
 {
     const HexCube &p1 = qoffset_to_cube(unit->pos);
     const HexCube &p2 = qoffset_to_cube(unit->enemy->pos);
-    return cube_distance(p1, p2);;
+    return cube_distance(p1, p2);
+}
+
+float GameMap::distance(const FightUnit *unit1, const FightUnit *unit2)
+{
+    const HexCube &p1 = qoffset_to_cube(unit1->pos);
+    const HexCube &p2 = qoffset_to_cube(unit2->pos);
+    return cube_distance(p1, p2);
+}
+
+std::vector<FightUnit *> GameMap::find_around(int len, const OffsetCoord &pos)
+{
+    return {};
+}
+
+FightUnit * GameMap::rand_around_one(int len, const OffsetCoord &pos)
+{
+    return nullptr;
+}
+
+std::vector<FightUnit *> GameMap::dir_units(const FightUnit *unit)
+{
+    return {};
 }
 
 static std::vector<Vector2> GetCoverCoordinates(FightUnit *unit, Vector2 pos)
@@ -38,15 +60,29 @@ bool GameMap::move(FightUnit *unit, Vector2 pos)
     this->remove(unit);
 
     for (auto &it : positions) {
-        this->game_map[it.x][it.y].unit = unit;
+        this->game_map[it.x][it.y].units[unit->id] = unit;
     }
 
     return true;
 }
 
+void GameMap::set_hero(FightUnit *unit, Vector2 pos)
+{
+    if (!unit || !is_valid_pos(pos)) {
+        return;
+    }
+
+    this->game_map[pos.x][pos.y].units[unit->id] = unit;
+}
+
 void GameMap::remove(FightUnit *unit)
 {
+    auto it = this->game_map[unit->pos.x][unit->pos.y].units.find(unit->id);
+    if (!unit || !is_valid_pos(unit->pos) || it == this->game_map[unit->pos.x][unit->pos.y].units.end()) {
+        return;
+    }
 
+    this->game_map[unit->pos.x][unit->pos.y].units.erase(unit->id);
 }
 
 std::vector<Node*> GameMap::aStarSearch(Node* start, Node* target)

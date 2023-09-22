@@ -12,6 +12,8 @@ public:
 public:
     std::string tag;    // 用于外部索引
     short idx;          // 用于对象池索引
+public:
+    int id = 0;         // 当前场次游戏对象的唯一id
 };
 
 #endif

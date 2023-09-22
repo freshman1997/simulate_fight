@@ -38,8 +38,8 @@ void BuffBase::on_add()
     }
 
     trigger_time = buff_cfg->trigger_time;
-    if (this->buff_cfg->param_type == buff_param_type::percent) {
-        switch (this->buff_cfg->functype) {
+    if ((buff_param_type)this->buff_cfg->param_type == buff_param_type::percent) {
+        switch ((buff_func_type)this->buff_cfg->functype) {
             case buff_func_type::hp: {
                 if (!params.empty()) {
                     float real_amount = this->to->max_hp * params[0];
@@ -61,17 +61,31 @@ void BuffBase::on_add()
 
 void BuffBase::on_remove() 
 { 
+    --trigger_time;
     reset();
     to->trigger_event(EventType::UNIT_RM_BUFF, {this});
 }
 
 void BuffBase::free()
 {
-    ObjectManager::get_instance().release_object(this);
+    if (trigger_time <= 0) {
+        ObjectManager::get_instance().release_object(this);
+    }
 }
 
 void BuffBase::reset()
 {
-    params.clear();
+    if (trigger_time <= 0) {
+        params.clear();
+    }
+}
+
+void BuffBase::set_buff_critical_param()
+{
+    if (!this->from || !this->from->skill_critic) {
+        return;
+    }
+
+    critical = true;
 }
 

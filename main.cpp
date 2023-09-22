@@ -32,7 +32,7 @@ int main()
     //GameMap m;
     //m.find_path({0, 0}, {1, 1});
     LuaAdapter la;
-    la.excute_file("../lua_source/test.lua");
+    la.reload("logic/hello");
 
     if (!pre_start()) {
         return -1;

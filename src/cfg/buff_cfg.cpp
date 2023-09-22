@@ -20,14 +20,14 @@ bool BuffCfg::parse_buff_cfg(json &json_data)
             buf.id = it["id"];
         }
         
-        buf.functype = buff_func_type::none;
+        buf.functype = -1;
         if (it["func_type"].is_number_integer()) {
-            buf.functype = (buff_func_type)it["func_type"];
+            buf.functype = (int)it["func_type"];
         }
         
-        buf.trigger_cond = buff_trigger_condition::none;
+        buf.trigger_cond = -1;
         if (it["trigger_condition"].is_number_integer()) {
-            buf.trigger_cond = (buff_trigger_condition)it["trigger_condition"];
+            buf.trigger_cond = (int)it["trigger_condition"];
         }
 
         buf.trigger_time = -1;
@@ -47,11 +47,6 @@ bool BuffCfg::parse_buff_cfg(json &json_data)
         buf.die_keep = false;
         if (it["keep"].is_number_integer()) {
             buf.die_keep = it["keep"];
-        }
-
-        buf.target_amount = -1;
-        if (it["target_amount"].is_number_integer()) {
-            buf.target_amount = it["target_amount"];
         }
 
         if (it["impl_name"].is_string()) {
