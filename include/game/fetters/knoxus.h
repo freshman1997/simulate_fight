@@ -9,6 +9,10 @@ class Knoxus : public FetterBase
 public:
     virtual Object * clone();
     virtual Object * clone_and_clean();
+
+    virtual bool init();
+    virtual void deinit();
+    
     virtual void update(float delta);
 
     // 正式开启战斗之前

@@ -17,14 +17,14 @@ Object * BuffBase::clone_and_clean()
 
 void BuffBase::update(float deltaTime)
 {
-    if (buff_cfg->lasting <= 0) {
+    if (lasting <= 0) {
         to->on_buff_end(this);
         free();
         return;
     }
 
     buff_time += deltaTime;
-    if (buff_time >= buff_cfg->lasting) {
+    if (buff_time >= lasting) {
         to->on_buff_end(this);
         free();
     }

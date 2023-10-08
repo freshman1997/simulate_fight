@@ -382,7 +382,11 @@ void Game::start_pve()
 					continue;
 				}
 
-				buff->params = it.second;
+				if (!it.second.empty()) {
+					buff->lasting = it.second[0];
+					std::copy(it.second.begin() + 1, it.second.end(), buff->params.begin());
+				}
+
 				unit->add_buff(buff);
 			}
 

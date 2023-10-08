@@ -14,10 +14,12 @@ void GamePlayer::update(float delta)
     }
 }
 
-void GamePlayer::on_fight_begin()
+bool GamePlayer::on_fight_begin()
 {
     for (auto &it : fetters) {
-        it->on_begin();
+        if (it->init()) {
+			return false;
+		}
     }
 
     if (!cache_buffs.empty()) {
@@ -30,6 +32,8 @@ void GamePlayer::on_fight_begin()
         this->cache_buffs.clear();
         this->cache_buffs.shrink_to_fit();
     }
+
+	return true;
 }
 
 void GamePlayer::on_fight_end(bool win, int rest)

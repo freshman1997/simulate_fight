@@ -20,7 +20,7 @@ void FightUnit::do_add_buff(BuffBase *buff)
     } else {
         auto it = this->buffs.find(buff->buff_cfg->id);
         if (it != this->buffs.end()) {
-            it->second->buff_time -= buff->buff_cfg->lasting;
+            it->second->buff_time -= buff->lasting;
             buff->on_remove();
             buff->free();
             return;
@@ -319,24 +319,49 @@ bool HeroBase::init()
     if (!this->ai) {
         return false;
     }
+    
+    this->ai->set_data(this);
 
     atk_time = 0;
     cumulative_atk_time = 0;
 
     // 设置属性部分
+    this->hp = hero_cfg->hp[star];
+    this->mp = hero_cfg->mp[star];
+    this->atk_val = hero_cfg->atk_val[star];
+    this->atk_distance = hero_cfg->atk_distance[star];
+    this->atk_speed = hero_cfg->atk_speed[star];
+    this->ad_def_val = hero_cfg->atk_def[star];
+    this->ap_val = hero_cfg->ap_val[star];
+    this->ap_def_val = hero_cfg->ap_def[star];
+    this->move_speed = hero_cfg->move_speed[star];
+    this->critical_rate = hero_cfg->critical_rate[star];
 
-
-    // 装备有些是需要计算总的属性的，所以需要最后计算
     for (auto &it : this->equipments) {
-        it.second->on_begin();
-    }
-
-    if (this->owner) {
-        const std::vector<BuffBase *> &player_buffs = this->owner->get_fight_buffs();
-        for (auto &it : player_buffs) {
-
+        if (it.second->init()) {
+            return false;
         }
     }
+
+    const std::vector<BuffBase *> &player_buffs = this->owner->get_fight_buffs();
+    for (auto &it : player_buffs) {
+        add_buff(it);
+    }
+
+    for (auto &it : this->equipments) {
+        it.second->on_before_round();
+    }
+
+    this->max_hp = this->hp;
+    this->max_mp = this->mp;
+    this->max_atk_val = this->atk_val;
+    this->max_atk_distance = this->atk_distance;
+    this->max_atk_speed = this->atk_speed;
+    this->max_ap_def_val = this->ad_def_val;
+    this->max_ap_val = this->ap_val;
+    this->max_ap_def_val = this->ap_def_val;
+    this->max_move_speed = this->move_speed;
+    this->max_critical_rate = this->critical_rate + this->critical_extra;
 
     return true;
 }
@@ -352,6 +377,9 @@ void HeroBase::update(float deltaTime)
     
     this->delta = deltaTime;
     this->ai->update(deltaTime);
+    for (auto &it : this->equipments) {
+        it.second->update(deltaTime);
+    }
 }
 
 float HeroBase::calc_damage(hurt_sub_t type, float damage)
@@ -437,7 +465,7 @@ void HeroBase::perform_hurt(hurt_t type, hurt_sub_t subtype, FightUnit *from, Fi
         param.atk = type == hurt_t::attack;
         param.killer = from;
 
-        trigger_event(EventType::UNIT_DIE, {to});
+        trigger_event(EventType::UNIT_DIE, {&param});
     }
 }
 

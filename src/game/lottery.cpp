@@ -7,6 +7,7 @@
 #include "cfg/game_cfg.h"
 #include "cfg/hero_cfg.h"
 #include "cfg/lottery_cfg.h"
+#include "game/equip.h"
 #include "game/lottery.h"
 #include "manager/cfg_manager.h"
 
@@ -167,7 +168,21 @@ void LotteryHelper::release(int hero_id, int star)
 }
 
 ////////////////// equip /////////////////////
-std::vector<EquipmentBase *> LotteryHelper::rand_equips(int amount, int type)
+std::vector<const Equip *> LotteryHelper::rand_equips(int amount, int type)
 {
-    return {};
+    std::vector<const Equip *> res;
+
+    if (equip_type(type) == equip_type::normal_equip) {
+        const std::vector<int> &rand_equip =  lottery_equips(amount);
+        for (auto &it : rand_equip) {
+            res.push_back(CfgManager::get_instance().equip_cfg.get_equip(it));
+        }
+    } else if (equip_type(type) == equip_type::shard_equip) {
+        const std::vector<int> &rand_equip =  CfgManager::get_instance().equip_cfg.lottery_shard_equip(amount);
+        for (auto &it : rand_equip) {
+            res.push_back(CfgManager::get_instance().equip_cfg.get_equip(it));
+        }
+    }
+
+    return res;
 }

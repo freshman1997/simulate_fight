@@ -9,6 +9,7 @@ class BuffBase;
 
 enum class equip_type : char
 {
+    none = 0,
     shard_equip,            // 散件
     normal_equip,           // 普通成装
     light_equip,            // 成装的光明版本
@@ -20,6 +21,7 @@ enum class equip_type : char
 
 enum class other_equip_func_type
 {
+    none = 0,
     unequip,                // 卸下
     separate,               // 拆开
     re_rand,                // 重铸
@@ -35,7 +37,9 @@ public:
     virtual void update(float deltaTime);
 
     // 进入战斗前计算
-    virtual void on_begin();    
+    virtual bool init();
+    // 开始回合前
+    virtual void on_before_round() {}   
 
     // 受到伤害时
     virtual void on_being_hurt(int damage, int type, int sub_type);
@@ -44,6 +48,7 @@ public:
     virtual void on_performing_skill(std::vector<BuffBase *> buffs);
     
 public:
+    equip_type e_type = equip_type::none;
     const Equip *equip_cfg = nullptr;
     FightUnit *owner = nullptr;
     

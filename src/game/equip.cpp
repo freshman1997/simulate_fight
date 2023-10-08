@@ -8,6 +8,7 @@
 #include "game/fight.h"
 #include "game/game.h"
 #include "manager/object_manager.hpp"
+#include <algorithm>
 
 REGISTER_TYPE("equip_base", EquipmentBase)
 
@@ -27,10 +28,10 @@ void EquipmentBase::update(float deltaTime)
 }
 
 // 进入战斗前计算
-void EquipmentBase::on_begin()
+bool EquipmentBase::init()
 {
     if (!equip_cfg || !owner) {
-        return;
+        return false;
     }
 
     for (auto &it : equip_cfg->buffs) {
@@ -51,11 +52,17 @@ void EquipmentBase::on_begin()
 
         buff->buff_cfg = buff_cfg;
         buff->to = this->owner;
-        buff->params = it.second;
+        if (!it.second.empty()) {
+            buff->lasting = it.second[0];
+            std::copy(it.second.begin() + 1, it.second.end(), buff->params.begin());
+        }
+        
         buff->trigger_time = buff_cfg->trigger_time;
 
         this->owner->add_buff(buff);
     }
+
+    return true;
 }
 
 // 受到伤害时

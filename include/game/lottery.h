@@ -3,7 +3,7 @@
 #include <vector>
 #include <unordered_map>
 
-class EquipmentBase;
+class Equip;
 
 class LotteryHelper
 {
@@ -47,7 +47,7 @@ public:
     bool rand_one(float ratio);
 public:
     // 随机装备（成装）
-    std::vector<EquipmentBase *> rand_equips(int amount, int type);
+    std::vector<const Equip *> rand_equips(int amount, int type);
 
 public:
     // 卖掉卡

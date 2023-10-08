@@ -20,6 +20,8 @@ Object * Fight::clone_and_clean()
 
 Fight::Fight(Game *_game) : error(false), win_side(-1), rest_heros(0), map(std::make_shared<GameMap>()), game(_game), is_mirror(false)
 {
+    p1 = nullptr;
+    p2 = nullptr;
     memset(die_counter, 0, sizeof(die_counter));
 }
 
@@ -109,7 +111,19 @@ bool Fight::init()
         }
     });
 
-    return true;
+    bool res = false;
+    if (p1) {
+        res = p1->on_fight_begin();
+        if (!res) {
+            return false;
+        }
+    }
+
+    if (p2) {
+        res = p2->on_fight_begin();
+    }
+
+    return res;
 }
 
 void Fight::deinit()

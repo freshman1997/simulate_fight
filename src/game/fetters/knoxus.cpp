@@ -19,6 +19,16 @@ void Knoxus::on_before_round()
 
 }
 
+bool Knoxus::init()
+{
+    return true;
+}
+
+void Knoxus::deinit()
+{
+    
+}
+
 void Knoxus::update(float delta)
 {
 

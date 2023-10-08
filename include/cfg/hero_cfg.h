@@ -13,6 +13,7 @@ struct Hero
     int init_mp[3];                                             // 初始蓝量
     float atk_speed[3];                                         // 初始攻速
     int atk_val[3];                                             // 初始攻击力
+    int ap_val[3];                                              // 
     int atk_def[3];                                             // 初始护甲
     int ap_def[3];                                              // 初始魔抗
     int critical_rate[3];                                       // 初始暴击几率
@@ -30,6 +31,23 @@ struct Hero
     std::string name;                                           // 名字
     std::string impl_name;                                      // 实现对象名称
     std::string ai_impl_name;
+};
+
+struct OtherStarHero
+{
+    int hero_id;                                                // id
+    int hp;                                                  // 初始血量
+    int mp;                                                  // 星级对应最大蓝量
+    int init_mp;                                             // 初始蓝量
+    float atk_speed;                                         // 初始攻速
+    int atk_val;                                             // 初始攻击力
+    int ap_val;                                              // 
+    int atk_def;                                             // 初始护甲
+    int ap_def;                                              // 初始魔抗
+    int critical_rate;                                       // 初始暴击几率
+    int critical_tims;                                       // 初始暴击伤害倍率
+    int move_speed;                                          // 初始移速
+    int atk_distance;                                        // 星级对应的初始攻击距离
 };
 
 struct Fetter

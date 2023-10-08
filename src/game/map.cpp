@@ -85,7 +85,7 @@ void GameMap::remove(FightUnit *unit)
     this->game_map[unit->pos.x][unit->pos.y].units.erase(unit->id);
 }
 
-std::vector<Node*> GameMap::aStarSearch(Node* start, Node* target)
+std::vector<Node*> GameMap::aStarSearch(Node* start, Node* target, float dis)
 {
     if (!start || !target) {
         return {};
@@ -112,7 +112,7 @@ std::vector<Node*> GameMap::aStarSearch(Node* start, Node* target)
         closedList.push_back(currentNode);
 
         // 找到目标节点，返回路径
-        if (currentNode->cude == target->cude) {
+        if (cube_distance(currentNode->cude, target->cude) <= dis || currentNode->cude == target->cude) {
             return getPath(currentNode);
         }
 
@@ -164,9 +164,10 @@ std::vector<Node*> GameMap::aStarSearch(Node* start, Node* target)
     return {};  // 无法找到路径，返回空路径
 }
 
-void GameMap::find_path(Vector2 from, Vector2 to, std::vector<Vector2> &res)
+void GameMap::find_path(Vector2 from, Vector2 to, std::vector<Vector2> &res, float dis)
 {
-    const std::vector<Node *> &path = aStarSearch(new Node(qoffset_to_cube(from)), new Node(qoffset_to_cube(to)));
+    const std::vector<Node *> &path = aStarSearch(new Node(qoffset_to_cube(from)), new Node(qoffset_to_cube(to)), dis);
+
     if (path.empty()) {
         return;
     }

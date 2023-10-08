@@ -14,8 +14,8 @@ bool EquipCfg::parse_equip_config(json &)
 
 const Equip * EquipCfg::get_equip(int id)
 {
-    auto it = this->equips.find(id);
-    return it == this->equips.end() ? nullptr : &it->second;
+    auto it = this->normal_equips.find(id);
+    return it == this->normal_equips.end() ? nullptr : &it->second;
 }
 
 const Equip * EquipCfg::get_shard_equip(int id)
@@ -45,5 +45,5 @@ std::vector<int> EquipCfg::lottery_shard_equip(int amount)
 
 std::vector<int> EquipCfg::lottery_equip(int amount)
 {
-    return lottery(equips, amount);
+    return lottery(normal_equips, amount);
 }

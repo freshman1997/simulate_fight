@@ -43,7 +43,7 @@ class FetterBase : public Actor
 {
 public:
     // 计算buff等
-    virtual void on_begin();
+    virtual bool init();
     // 正式开启战斗之前
     virtual void on_before_round() {}
 

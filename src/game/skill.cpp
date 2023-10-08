@@ -247,8 +247,12 @@ void SkillBase::build_buffs()
         buff->buff_cfg = buff_cfg;
         buff->f_type = buff_from_type::skill;
         buff->from = owner;
-        buff->params = it1.params;
         buff->skill_id = this->id;
+        if (!it1.params.empty()) {
+            buff->lasting = it1.params[0];
+            std::copy(it1.params.begin() + 1, it1.params.end(), buff->params.begin());
+        }
+        
         if (this->owner->skill_critic) {
             buff->set_buff_critical_param();
         }

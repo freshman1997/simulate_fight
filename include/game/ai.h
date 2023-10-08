@@ -12,8 +12,6 @@ class BuffBase;
 class AiBase : public Actor
 {
 public:
-    AiBase() {}
-    AiBase(FightUnit *_target) : target(_target){}
     virtual void update(float deltaTime);
     virtual Object * clone() { return new AiBase; };
     virtual Object * clone_and_clean() { return clone(); };

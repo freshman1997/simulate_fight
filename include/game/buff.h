@@ -108,6 +108,7 @@ public:
     int skill_id = -1;
     int trigger_time = 0;
     float buff_time = 0;
+    float lasting = 0;
     const Buff *buff_cfg = nullptr;
     FightUnit *from = nullptr;
     FightUnit *to = nullptr;

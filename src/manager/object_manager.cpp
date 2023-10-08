@@ -6,7 +6,7 @@ ObjectManager::ObjectManager()
 
 ObjectManager & ObjectManager::get_instance()
 {
-    static ObjectManager instance;
+    thread_local static ObjectManager instance;
     return instance;
 }
 

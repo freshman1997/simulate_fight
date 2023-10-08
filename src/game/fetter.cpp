@@ -5,15 +5,15 @@
 #include "game/player.h"
 #include "game/game.h"
 
-void FetterBase::on_begin()
+bool FetterBase::init()
 {
     if (!player || !this->fetter_cfg || this->fetter_cfg->buff_amount.empty()) {
-        return;
+        return false;
     }
 
     auto it = this->fetter_cfg->buff_amount.find(this->active);
     if (it == this->fetter_cfg->buff_amount.end()) {
-        return;
+        return false;
     }
 
     for (auto &buff_item : it->second) {
@@ -27,7 +27,12 @@ void FetterBase::on_begin()
             continue;
         }
 
-        buff->params = buff_item.second;
+        if (!buff_item.second.empty()) {
+            buff->lasting = buff_item.second[0];
+            std::copy(buff_item.second.begin() + 1, buff_item.second.end(), buff->params.begin());
+        }
         this->player->add_unit_buff(buff);
     }
+    
+    return true;
 }

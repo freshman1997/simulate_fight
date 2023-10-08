@@ -26,7 +26,7 @@ class GamePlayer
 public:
     void update(float delta);
 
-    inline void on_fight_begin();
+    bool on_fight_begin();
 
     // 战斗结束调用
     void on_fight_end(bool win, int rest);

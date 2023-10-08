@@ -112,7 +112,7 @@ bool AiBase::find_path(FightUnit *unit)
     std::vector<Vector2> &path = unit->path;
     path.clear();
 
-    target->round_obj->map->find_path(unit->pos, unit->enemy->pos, path);
+    target->round_obj->map->find_path(unit->pos, unit->enemy->pos, path, unit->atk_distance);
     if (path.empty()) {
         return false;
     }

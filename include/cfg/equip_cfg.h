@@ -37,7 +37,7 @@ public:
     std::vector<int> lottery_equip(int amount);
 
 private:
-    std::unordered_map<int, Equip> equips;
+    std::unordered_map<int, Equip> normal_equips;
     std::unordered_map<int, Equip> shard_equips;
 };
 

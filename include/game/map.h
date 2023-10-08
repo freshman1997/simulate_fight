@@ -98,7 +98,7 @@ public:
 	// 与目标单位方向上所有
 	std::vector<FightUnit *> dir_units(const FightUnit *unit);
 
-	void find_path(Vector2 from, Vector2 to, std::vector<Vector2> &);
+	void find_path(Vector2 from, Vector2 to, std::vector<Vector2> &, float);
 
 	bool move(FightUnit *unit, Vector2 pos);
 
@@ -308,7 +308,7 @@ private:
 	}
 
 	// A*算法实现
-	std::vector<Node*> aStarSearch(Node* start, Node* target);
+	std::vector<Node*> aStarSearch(Node* start, Node* target, float);
 
 public:
 	

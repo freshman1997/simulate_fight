@@ -105,7 +105,6 @@ public:
     add_xx(atk_distance, int)
     add_xx(move_speed, int)
     add_xx(shield, int)
-    add_xx_1(stuck, bool)
 
 public:
     void trigger_event(EventType type, const EventParams &);
@@ -131,8 +130,6 @@ public:
     int move_speed = 0;         // 移速
     int shield = 0;             // 护盾值
 
-    int cover_size[2] = {0};
-
 public:
     bool is_sommon = false;
 
@@ -151,8 +148,8 @@ public:
 
 public:
     std::vector<Vector2> path;                     // 暂存的路径
-    FightUnit *enemy = nullptr;                               // 暂存的目标  
-    GamePlayer *owner = nullptr;                              // 暂存的玩家对象  
+    FightUnit *enemy = nullptr;                    // 暂存的目标  
+    GamePlayer *owner = nullptr;                   // 暂存的玩家对象  
 
 public:
     // 技能、AI
